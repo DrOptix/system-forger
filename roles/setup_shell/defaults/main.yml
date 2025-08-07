@@ -1,0 +1,26 @@
+# The user for whom to configure the shell.
+setup_shell_user: "{{ ansible_user_id }}"
+
+# Environment variables to set.
+#
+# - For simple variables: VAR_NAME: "value"
+# - For PATH (or other variables where values should be concatenated, space-separated):
+#   VAR_NAME:
+#     - "value1"
+#     - "value2"
+#
+# If VAR_NAME is "PATH" and the value is a list, it will be treated as paths
+# to be prepended to the existing PATH, ensuring uniqueness.
+# For any other VAR_NAME with a list value, elements will be joined by spaces.
+setup_shell_env:
+  # Example: Setting a simple environment variable
+  # MY_APP_DIR: "/opt/my_app"
+
+  # Example: Adding multiple paths to PATH
+  # PATH:
+  #   - "$HOME/.local/bin"
+
+  # Example: Concatenating values for another variable (e.g., JAVA_OPTS)
+  # JAVA_OPTS:
+  #   - "-Xmx512m"
+  #   - "-Djava.awt.headless=true"

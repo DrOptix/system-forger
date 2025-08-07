@@ -1,0 +1,31 @@
+# THIS FILE IS MANAGED BY ANSIBLE; ANY MANUAL CHANGES WILL BE LOST
+
+# Custom environment variables
+{% for var_name, var_value in setup_shell_env.items() %}
+  {% if var_name == "PATH" and var_value is iterable and not (var_value is string) %}
+
+# Add custom paths to PATH, prepending and ensuring uniqueness
+paths_to_add=(
+  {% for path_item in var_value %}
+  "{{ path_item }}"
+  {% endfor %}
+)
+
+for path in "${paths_to_add[@]}"; do
+  if [[ ":$PATH:" != *":$path:"* ]]; then
+    export PATH="$path:$PATH"
+  fi
+done
+
+  {% elif var_value is iterable and not (var_value is string) %}
+
+# For other variables with list values, concatenate with spaces
+export {{ var_name }}="{{ var_value | join(' ') }}"
+
+  {% else %}
+
+# Simple variable assignment
+export {{ var_name }}="{{ var_value }}"
+
+  {% endif %}
+{% endfor %}
