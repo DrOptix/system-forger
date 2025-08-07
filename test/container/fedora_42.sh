@@ -6,8 +6,8 @@ set -euo pipefail
 SCRIPT_NAME=$(basename "$0")
 
 # --- Container configuration ---
-CONTAINER_IMAGE="fedora:42"
-CONTAINER_NAME="system-forger-fedora-42-$(date +%Y%m%d_%H%M%S)"
+CONTAINER_IMAGE="system-forger:fedora-42"
+CONTAINER_NAME="system-forger_fedora-42_$(date +%Y%m%d_%H%M%S)"
 CONTAINER_MOUNT_PATH="/opt/system-forger"
 
 # --- Hardcoded Paths ---
@@ -40,11 +40,11 @@ echo "[$SCRIPT_NAME] Initializing Podman Container"
 echo "[$SCRIPT_NAME]   Script directory: $SCRIPT_DIR"
 echo "[$SCRIPT_NAME]   Resolved Ansible Project Root: $ABSOLUTE_ANSIBLE_PROJECT_ROOT"
 
-# Pull the Fedora image.
-echo "[$SCRIPT_NAME]   Pulling image '$CONTAINER_IMAGE'..."
+# Build the container image
+echo "[$SCRIPT_NAME]   Building custom $CONTAINER_IMAGE image..."
 
-if ! podman pull "$CONTAINER_IMAGE"; then
-    echo "[$SCRIPT_NAME]  Failed to pull image. Check your Podman setup." >&2
+if ! podman build -f "$SCRIPT_DIR"/fedora_42.Containerfile -t "$CONTAINER_IMAGE"; then
+    echo "[$SCRIPT_NAME]   Failed to build image. Check your Podman setup." >&2
     exit 1
 fi
 
@@ -58,7 +58,7 @@ if ! podman run --name "$CONTAINER_NAME" \
                 --volume "${ABSOLUTE_ANSIBLE_PROJECT_ROOT}:${CONTAINER_MOUNT_PATH}:ro,Z" \
                 "$CONTAINER_IMAGE" \
                 sleep infinity; then
-    echo "[$SCRIPT_NAME]  Failed to start container. Check Podman logs." >&2
+    echo "[$SCRIPT_NAME]   Failed to start container. Check Podman logs." >&2
     exit 1
 fi
 
