@@ -34,6 +34,15 @@
     group: "{{ setup_shell_user }}"
     mode: '0755'
 
+- name: Deploy static fish configurations
+  ansible.builtin.copy:
+    src: .config/fish/
+    dest: "{{ target_user_info.home }}/.config/fish/"
+    owner: "{{ setup_shell_user }}"
+    group: "{{ setup_shell_user }}"
+    mode: "0644"
+    directory_mode: "0755"
+
 - name: Deploy config.fish for {{ setup_shell_user }}
   ansible.builtin.template:
     src: config.fish.j2
