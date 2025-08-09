@@ -6,9 +6,12 @@ Ansible role to automate the setup of a workstation's shell environment.
 
 * Installs `bash` and `fish` shells.
 * Sets `fish` as the default interactive shell for a specified user.
-* Deploys custom `.bashrc` and `config.fish` files.
-* Manages environment variables and `PATH` additions through a single flexible
-  variable.
+* Deploys custom `.bashrc` and `config.fish` files managing environment
+  variables and `PATH` additions in a common way, the playbook being the soruce
+  of truth.
+* Custom fish prompt: `[HH:MM] user@host:short_pwd (git branch) ▶ `, the git
+  branch is show only when inside a git directory.
+* Custom fish greeter showing kernel version, uptime and the hostname.
 
 ## Requirements
 
