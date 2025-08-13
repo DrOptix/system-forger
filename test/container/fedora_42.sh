@@ -1,4 +1,4 @@
-!/usr/bin/env bash
+#!/usr/bin/env bash
 
 # Exit on any error, use unbound variables, and fail on pipe errors.
 set -euo pipefail
