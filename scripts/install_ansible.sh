@@ -13,7 +13,7 @@ if ! command -v ansible &> /dev/null; then
         sudo dnf install -y ansible
     elif command -v apt &> /dev/null; then
         sudo apt update
-        sudo apt install -y ansible
+        sudo env DEBIAN_FRONTEND=noninteractive apt install -y ansible
     elif command -v pacman &> /dev/null; then
         sudo pacman -Sy --noconfirm ansible
     else
