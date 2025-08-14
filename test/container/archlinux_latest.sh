@@ -71,6 +71,12 @@ if ! podman exec "$CONTAINER_NAME" pacman -Sy --noconfirm &>/dev/null; then
     exit 1
 fi
 
+
+if ! podman exec "$CONTAINER_NAME" pacman -S --noconfirm sudo; then
+    echo "  Failed to install sudo. Check container logs." >&2
+    exit 1
+fi
+
 if ! podman exec "$CONTAINER_NAME" pacman -S --noconfirm ansible; then
     echo "  Failed to install Ansible. Check container logs." >&2
     exit 1
