@@ -1,0 +1,12 @@
+---
+- name: Configure GameMaster
+  hosts: localhost
+  become: yes
+
+  roles:
+    - role: setup_shell
+      vars:
+        setup_shell_user: droptix
+        setup_shell_env:
+          PATH:
+            - "$HOME/.local/bin"

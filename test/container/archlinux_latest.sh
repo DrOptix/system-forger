@@ -6,8 +6,8 @@ set -euo pipefail
 SCRIPT_NAME=$(basename $0)
 
 # --- Container configuration ---
-CONTAINER_IMAGE="archlinux:latest"
-CONTAINER_NAME="system-forger-archlinux-latest-$(date +%Y%m%d_%H%M%S)"
+CONTAINER_IMAGE="system-forger:archlinux-latest"
+CONTAINER_NAME="system-forger_archlinux-latest_$(date +%Y%m%d_%H%M%S)"
 CONTAINER_MOUNT_PATH="/opt/system-forger"
 
 # --- Hardcoded Paths ---
@@ -40,11 +40,11 @@ echo "[$SCRIPT_NAME] Initializing Podman Container ---"
 echo "[$SCRIPT_NAME]   Script directory: $SCRIPT_DIR"
 echo "[$SCRIPT_NAME]   Resolved Ansible Project Root: $ABSOLUTE_ANSIBLE_PROJECT_ROOT"
 
-# Pull the Archlinux image.
-echo "[$SCRIPT_NAME]   Pulling image '$CONTAINER_IMAGE'..."
+# Build the container image
+echo "[$SCRIPT_NAME]   Building custom $CONTAINER_IMAGE image..."
 
-if ! podman pull "$CONTAINER_IMAGE"; then
-    echo "[$SCRIPT_NAME]   Failed to pull image. Check your Podman setup." >&2
+if ! podman build -f "$SCRIPT_DIR"/archlinux_latest.Containerfile -t "$CONTAINER_IMAGE"; then
+    echo "[$SCRIPT_NAME]   Failed to build image. Check your Podman setup." >&2
     exit 1
 fi
 
@@ -63,22 +63,6 @@ if ! podman run --name "$CONTAINER_NAME" \
 fi
 
 echo "[$SCRIPT_NAME]   Container '$CONTAINER_NAME' started."
-
-
-# Install sudo inside the container.
-echo "[$SCRIPT_NAME] Installing sudo in container '$CONTAINER_NAME'..."
-
-if ! podman exec "$CONTAINER_NAME" pacman -Sy --noconfirm &>/dev/null; then
-    echo "[$SCRIPT_NAME]   Failed to update pacman cache. Is the container running?" >&2
-    exit 1
-fi
-
-if ! podman exec "$CONTAINER_NAME" pacman -S --noconfirm sudo; then
-    echo "[$SCRIPT_NAME]   Failed to install sudo. Check container logs." >&2
-    exit 1
-fi
-
-echo "[$SCRIPT_NAME]   sudo installed."
 
 echo "[$SCRIPT_NAME] Entering Interactive Shell"
 echo "[$SCRIPT_NAME]   Your entire Ansible project is mounted inside the container at: ${CONTAINER_MOUNT_PATH}"
