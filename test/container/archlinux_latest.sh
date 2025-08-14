@@ -65,26 +65,20 @@ fi
 echo "[$SCRIPT_NAME]   Container '$CONTAINER_NAME' started."
 
 
-# Install Ansible inside the container.
-echo "[$SCRIPT_NAME]   Installing Ansible in container '$CONTAINER_NAME'..."
+# Install sudo inside the container.
+echo "[$SCRIPT_NAME] Installing sudo in container '$CONTAINER_NAME'..."
 
 if ! podman exec "$CONTAINER_NAME" pacman -Sy --noconfirm &>/dev/null; then
     echo "[$SCRIPT_NAME]   Failed to update pacman cache. Is the container running?" >&2
     exit 1
 fi
 
-
 if ! podman exec "$CONTAINER_NAME" pacman -S --noconfirm sudo; then
     echo "[$SCRIPT_NAME]   Failed to install sudo. Check container logs." >&2
     exit 1
 fi
 
-if ! podman exec "$CONTAINER_NAME" pacman -S --noconfirm ansible; then
-    echo "[$SCRIPT_NAME]   Failed to install Ansible. Check container logs." >&2
-    exit 1
-fi
-
-echo "[$SCRIPT_NAME] Ansible installed."
+echo "[$SCRIPT_NAME]   sudo installed."
 
 echo "[$SCRIPT_NAME] Entering Interactive Shell"
 echo "[$SCRIPT_NAME]   Your entire Ansible project is mounted inside the container at: ${CONTAINER_MOUNT_PATH}"

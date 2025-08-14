@@ -79,16 +79,6 @@ fi
 
 echo "[$SCRIPT_NAME]   sudo installed."
 
-# Install Ansible inside the container.
-echo "[$SCRIPT_NAME] Installing Ansible in container '$CONTAINER_NAME'..."
-
-if ! podman exec "$CONTAINER_NAME" apt install -y ansible; then
-    echo "[$SCRIPT_NAME]   Failed to install Ansible. Check container logs." >&2
-    exit 1
-fi
-
-echo "[$SCRIPT_NAME]   Ansible installed."
-
 echo "[$SCRIPT_NAME] Entering Interactive Shell"
 echo "[$SCRIPT_NAME]   Your entire Ansible project is mounted inside the container at: ${CONTAINER_MOUNT_PATH}"
 echo "[$SCRIPT_NAME]   "
