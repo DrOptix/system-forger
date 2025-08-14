@@ -20,7 +20,7 @@ ABSOLUTE_ANSIBLE_PROJECT_ROOT="$(realpath -s "${SCRIPT_DIR}/../..")"
 
 # Function triggered on EXIT to cleanup the container
 function cleanup() {
-    echo "--- Shell session ended. Initiating cleanup. ---"
+    echo "Shell session ended. Initiating cleanup."
     echo "  Cleaning up container $CONTAINER_NAME..."
 
     podman container stop "$CONTAINER_NAME" &>/dev/null || true
@@ -34,7 +34,7 @@ trap cleanup EXIT
 
 # --- Main script logic ---
 #
-echo "--- Initializing Podman Container ---"
+echo "Initializing Podman Container"
 echo "  Script directory: $SCRIPT_DIR"
 echo "  Resolved Ansible Project Root: $ABSOLUTE_ANSIBLE_PROJECT_ROOT"
 
@@ -62,14 +62,21 @@ fi
 
 echo "  Container '$CONTAINER_NAME' started."
 
-
-# Install Ansible inside the container.
-echo "  Installing Ansible in container '$CONTAINER_NAME'..."
+# Install sudo inside the container.
+echo "  Installing sudo in container '$CONTAINER_NAME'..."
 
 if ! podman exec "$CONTAINER_NAME" apt update -y &>/dev/null; then
     echo "  Failed to update APT cache. Is the container running?" >&2
     exit 1
 fi
+
+if ! podman exec "$CONTAINER_NAME" apt install -y sudo; then
+    echo "  Failed to install sudo. Check container logs." >&2
+    exit 1
+fi
+
+# Install Ansible inside the container.
+echo "  Installing Ansible in container '$CONTAINER_NAME'..."
 
 if ! podman exec "$CONTAINER_NAME" apt install -y ansible; then
     echo "  Failed to install Ansible. Check container logs." >&2
@@ -78,7 +85,7 @@ fi
 
 echo "  Ansible installed."
 
-echo "--- Entering Interactive Shell ---"
+echo "Entering Interactive Shell"
 echo "  Your entire Ansible project is mounted inside the container at: ${CONTAINER_MOUNT_PATH}"
 echo "  "
 echo "  You can 'cd' into ${CONTAINER_MOUNT_PATH} to navigate your project."
