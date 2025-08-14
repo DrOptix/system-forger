@@ -49,6 +49,10 @@ All variables are defined in `defaults/main.yml` and are prefixed with
           - "-Xmx512m"
           - "-Djava.awt.headless=true"
         ```
+* `setup_shell_packages_by_distro` (dictionary):
+  A dictionary that defines what packages to be installed for each distribution.
+
+  Currently there are defined lists for Fedora, Ubuntu and ArchLinux.
 
 ## Example Playbook
 

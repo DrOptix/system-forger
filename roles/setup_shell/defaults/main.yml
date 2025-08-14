@@ -24,3 +24,17 @@ setup_shell_env:
   # JAVA_OPTS:
   #   - "-Xmx512m"
   #   - "-Djava.awt.headless=true"
+
+setup_shell_packages_by_distro:
+  Fedora:
+    - bash
+    - fish
+    - procps-ng
+  Ubuntu:
+    - bash
+    - fish
+    - procps
+  Archlinux:
+    - bash
+    - fish
+    - procps-ng
