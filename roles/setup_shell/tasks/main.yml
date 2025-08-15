@@ -24,9 +24,25 @@
     group: "{{ setup_shell_user }}"
     mode: "0644"
 
+- name: Ensure .bashrc.d directory exists
+  ansible.builtin.file:
+    path: "{{ target_user_info.home }}/.bashrc.d"
+    state: directory
+    owner: "{{ setup_shell_user }}"
+    group: "{{ setup_shell_user }}"
+    mode: '0755'
+
 - name: Ensure .config/fish directory exists
   ansible.builtin.file:
     path: "{{ target_user_info.home }}/.config/fish"
+    state: directory
+    owner: "{{ setup_shell_user }}"
+    group: "{{ setup_shell_user }}"
+    mode: '0755'
+
+- name: Ensure .config/fish/conf.d directory exists
+  ansible.builtin.file:
+    path: "{{ target_user_info.home }}/.config/fish/conf.d"
     state: directory
     owner: "{{ setup_shell_user }}"
     group: "{{ setup_shell_user }}"
