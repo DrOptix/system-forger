@@ -3,10 +3,17 @@
   hosts: localhost
   become: yes
 
+  vars:
+    target_username: droptix
+
   roles:
     - role: setup_shell
       vars:
-        setup_shell_user: droptix
+        setup_shell_user: "{{ target_username }}"
         setup_shell_env:
           PATH:
             - "$HOME/.local/bin"
+
+    - role: setup_rust
+      vars:
+        setup_rust_user: "{{ target_username }}"
