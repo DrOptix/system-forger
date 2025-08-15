@@ -31,3 +31,19 @@
   become: yes
   become_user: "{{ setup_rust_user }}"
   when: not rustc_status.stat.exists
+
+- name: Deploy rust_env.sh for {{ setup_rust_user }}
+  ansible.builtin.template:
+    src: rust_env.sh.j2
+    dest: "{{ target_user_info.home }}/.bashrc.d/rust_env.sh"
+    owner: "{{ setup_shell_user }}"
+    group: "{{ setup_shell_user }}"
+    mode: "0644"
+
+- name: Deploy rust_env.fish for {{ setup_rust_user }}
+  ansible.builtin.template:
+    src: rust_env.fish.j2
+    dest: "{{ target_user_info.home }}/.config/fish/conf.d/rust_env.fish"
+    owner: "{{ setup_shell_user }}"
+    group: "{{ setup_shell_user }}"
+    mode: "0644"
