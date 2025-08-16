@@ -1,0 +1,9 @@
+# THIS FILE IS MANAGED BY ANSIBLE; ANY MANUAL CHANGES WILL BE LOST
+#
+# This file is sourced from `~/.config/fish/conf.d/`.
+# It sets up Rust environment.
+
+# Load cargo environment if it exists.
+if test -f "{{ target_user_info.home }}/.cargo/env.fish"
+    source "{{ target_user_info.home }}/.cargo/env.fish"
+end

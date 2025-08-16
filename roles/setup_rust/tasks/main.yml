@@ -1,0 +1,49 @@
+- name: "Gather facts about the target user ({{ setup_rust_user }})"
+  ansible.builtin.user:
+    name: "{{ setup_rust_user }}"
+  register: target_user_info
+  check_mode: true
+
+- name: Ensure GCC is installed
+  ansible.builtin.package:
+    name: gcc
+    state: present
+  become: yes
+
+- name: Download rustup to a temporary file
+  ansible.builtin.get_url:
+    url: https://sh.rustup.rs
+    dest: "/tmp/rustup.sh"
+    mode: '0755'
+  become: yes
+
+- name: Check if Rust is already installed for {{ setup_rust_user }}
+  ansible.builtin.stat:
+    path: "{{ target_user_info.home }}/.cargo/bin/rustc"
+  register: rustc_status
+  become: yes
+  become_user: "{{ setup_rust_user }}"
+
+- name: Install Rust using rustup.sh
+  ansible.builtin.command:
+    cmd: /tmp/rustup.sh --profile minimal --no-modify-path --default-toolchain {{ setup_rust_default_toolchain }} -y
+    creates: "{{ target_user_info.home }}/.cargo/bin/rustc"
+  become: yes
+  become_user: "{{ setup_rust_user }}"
+  when: not rustc_status.stat.exists
+
+- name: Deploy rust_env.sh for {{ setup_rust_user }}
+  ansible.builtin.template:
+    src: rust_env.sh.j2
+    dest: "{{ target_user_info.home }}/.bashrc.d/rust_env.sh"
+    owner: "{{ setup_shell_user }}"
+    group: "{{ setup_shell_user }}"
+    mode: "0644"
+
+- name: Deploy rust_env.fish for {{ setup_rust_user }}
+  ansible.builtin.template:
+    src: rust_env.fish.j2
+    dest: "{{ target_user_info.home }}/.config/fish/conf.d/rust_env.fish"
+    owner: "{{ setup_shell_user }}"
+    group: "{{ setup_shell_user }}"
+    mode: "0644"

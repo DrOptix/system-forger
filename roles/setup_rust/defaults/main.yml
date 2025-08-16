@@ -1,0 +1,5 @@
+# The user for whom to install Rust
+setup_rust_user: "{{ ansible_user_id }}"
+
+# The default tool chain to install, defaults to "stable"
+setup_rust_default_toolchain: stable
