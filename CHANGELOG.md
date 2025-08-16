@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- **bootstrap:** New `bootstrap.sh` script to automate the initial setup of a
+  Linux workstation. This includes idempotent installation of `git` and
+  `ansible` (cross-distribution), and cloning the `system-forger` repository
+  into `$HOME/.local/share/system-forger`.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments
