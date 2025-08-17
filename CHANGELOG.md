@@ -13,6 +13,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `ansible` (cross-distribution), and cloning the `system-forger` repository
   into `$HOME/.local/share/system-forger`.
 
+- **bootstrap:** Control the checked out branch with the `SYSTEM_FORGER_BRANCH`
+  environment variable. If it is not defined or it is empty then the `master`
+  branch will be checked out.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments
