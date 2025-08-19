@@ -1,0 +1,22 @@
+- name: Base CLI | bash | Ensure `bash` is installed
+  become: yes
+  ansible.builtin.package:
+    name: bash
+    state: present
+
+- name: Base CLI | bash | Deploy `$HOME/.bashrc`
+  ansible.builtin.copy:
+    src: .bashrc
+    dest: "{{ target_user_info.home }}/.bashrc"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+
+- name: Base CLI | bash | Ensure `$HOME/.bashrc.d/` directory exists
+  ansible.builtin.file:
+    path: "{{ target_user_info.home }}/.bashrc.d"
+    state: directory
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: '0755'
+

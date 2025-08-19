@@ -1,0 +1,2 @@
+- name: Base CLI | bash
+  ansible.builtin.include_tasks: ./bash.yml

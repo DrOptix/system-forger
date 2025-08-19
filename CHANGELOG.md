@@ -21,6 +21,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   These are the main setup entry points for different Linux environments,
   including pre-tasks to handle user details.
 
+- **setup_base_cli:** Implemented basic `bash` shell setup, sets up a modular
+  `~/.bashrc`, and creates the `~/.bashrc.d/` directory.
+
+  Playbooks now use this new role.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments

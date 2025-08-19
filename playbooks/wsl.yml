@@ -17,3 +17,6 @@
       ansible.builtin.fail:
         msg: "Target user '{{ target_user }}' does not exist on this system."
       when: not target_user_info
+
+  roles:
+    - role: setup_base_cli
