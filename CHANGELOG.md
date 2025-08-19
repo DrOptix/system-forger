@@ -17,6 +17,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   environment variable. If it is not defined or it is empty then the `master`
   branch will be checked out.
 
+- **playbooks:** Created initial `workstation.yml` and `wsl.yml` playbooks.
+  These are the main setup entry points for different Linux environments,
+  including pre-tasks to handle user details.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments
