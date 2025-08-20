@@ -26,6 +26,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Playbooks now use this new role.
 
+- **setup_base_cli:** Installing and configure `fish` shell. Create necessary
+  config directories (`~/.config/fish/conf.d/` and `~/.config/fish/functions/`),
+  deploying a custom `fish_prompt` function, and ensuring the `hostname` utility
+  is installed cross-distribution. The `hostname` utility is used by the custom
+  `fish_prompt`.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments

@@ -1,2 +1,5 @@
 - name: Base CLI | bash
   ansible.builtin.include_tasks: ./bash.yml
+
+- name: Base CLI | fish
+  ansible.builtin.include_tasks: ./fish.yml
