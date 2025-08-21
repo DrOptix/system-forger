@@ -25,34 +25,24 @@
     state: present
   when: ansible_distribution in ['Fedora']
 
-- name: Base CLI | fish | Ensure `$HOME/.config/fish/conf.d/` directory exists
+- name: Base CLI | fish | Ensure `fish` directories exists
   ansible.builtin.file:
-    path: "{{ target_user_info.home }}/.config/fish/conf.d/"
+    path: "{{ target_user_info.home }}/.config/fish/{{ item }}/"
     state: directory
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"
     mode: '0755'
+  loop:
+    - "conf.d"
+    - "functions"
 
-- name: Base CLI | fish | Ensure `$HOME/.config/fish/functions/` directory exists
-  ansible.builtin.file:
-    path: "{{ target_user_info.home }}/.config/fish/functions/"
-    state: directory
-    owner: "{{ target_user_info.name }}"
-    group: "{{ target_user_info.name }}"
-    mode: '0755'
-
-- name: Base CLI | fish | Deploy `$HOME/.config/fish/functions/fish_prompt.fish`
+- name: Base CLI | fish | Deploy custom `fish` functions
   ansible.builtin.copy:
-    src: .config/fish/functions/fish_prompt.fish
-    dest: "{{ target_user_info.home }}/.config/fish/functions/fish_prompt.fish"
+    src: ".config/fish/functions/{{ item }}"
+    dest: "{{ target_user_info.home }}/.config/fish/functions/{{ item }}"
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"
     mode: "0644"
-
-- name: Base CLI | fish | Deploy `$HOME/.config/fish/functions/fish_greeting.fish`
-  ansible.builtin.copy:
-    src: .config/fish/functions/fish_greeting.fish
-    dest: "{{ target_user_info.home }}/.config/fish/functions/fish_greeting.fish"
-    owner: "{{ target_user_info.name }}"
-    group: "{{ target_user_info.name }}"
-    mode: "0644"
+  loop:
+    - "fish_prompt.fish"
+    - "fish_greeting.fish"
