@@ -18,6 +18,13 @@
     state: present
   when: ansible_distribution in ['Archlinux']
 
+- name: Base CLI | fish | Ensure `uptime` is installed (Fedora)
+  become: yes
+  ansible.builtin.package:
+    name: procps-ng
+    state: present
+  when: ansible_distribution in ['Fedora']
+
 - name: Base CLI | fish | Ensure `$HOME/.config/fish/conf.d/` directory exists
   ansible.builtin.file:
     path: "{{ target_user_info.home }}/.config/fish/conf.d/"
@@ -38,6 +45,14 @@
   ansible.builtin.copy:
     src: .config/fish/functions/fish_prompt.fish
     dest: "{{ target_user_info.home }}/.config/fish/functions/fish_prompt.fish"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+
+- name: Base CLI | fish | Deploy `$HOME/.config/fish/functions/fish_greeting.fish`
+  ansible.builtin.copy:
+    src: .config/fish/functions/fish_greeting.fish
+    dest: "{{ target_user_info.home }}/.config/fish/functions/fish_greeting.fish"
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"
     mode: "0644"

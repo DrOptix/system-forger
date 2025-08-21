@@ -29,8 +29,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **setup_base_cli:** Installing and configure `fish` shell. Create necessary
   config directories (`~/.config/fish/conf.d/` and `~/.config/fish/functions/`),
   deploying a custom `fish_prompt` function, and ensuring the `hostname` utility
-  is installed cross-distribution. The `hostname` utility is used by the custom
-  `fish_prompt`.
+  is installed cross-distribution.
+
+  The `hostname` utility is used by the custom `fish_prompt`.
+
+- **setup_base_cli:** Added custom `fish` shell greeting. This new greeting
+  function displays the current kernel version, system uptime, and hostname on
+  shell startup.
+
+  Ensures `procps-ng` is installed on Fedora for `uptime` utility.
 
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
