@@ -44,6 +44,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   latest stable release tarball is downloaded directly from GitHub and deployed
   to the system, ensuring access to the latest version.
 
+- **setup_base_cli:** Add idempotency to `eza` installation on Fedora. We
+  install `eza` if it is missing from the system. We check the existance of
+  `/usr/bin/eza` binary.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments

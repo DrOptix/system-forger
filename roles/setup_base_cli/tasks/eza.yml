@@ -7,11 +7,18 @@
 
 - name: Base CLI | eza | Ensure `eza` is installed (Fedora)
   block:
+    - name: Base CLI | eza | Get status of currently installed `eza`
+      ansible.builtin.stat:
+        path: /usr/bin/eza
+      register: eza_status
+      check_mode: no
+
     - name: Base CLI | eza | Create temporary download directory
       ansible.builtin.file:
         path: "/tmp/eza_download"
         state: directory
         mode: '0755'
+      when: "not eza_status.stat.exists"
 
     - name: Base CLI | eza | Download latest `eza` release tarball
       become: yes
@@ -22,6 +29,7 @@
         owner: root
         group: root
         mode: "0755"
+      when: "not eza_status.stat.exists"
 
     - name: Base CLI | eza | Install `eza` binary to target directory
       ansible.builtin.copy:
@@ -32,9 +40,11 @@
         group: root
         mode: "0755"
       become: yes
+      when: "not eza_status.stat.exists"
 
     - name: Base CLI | eza | Cleanup temporary download directory
       ansible.builtin.file:
         path: "/tmp/eza_download"
         state: absent
+      when: "not eza_status.stat.exists"
   when: ansible_distribution in ['Fedora']
