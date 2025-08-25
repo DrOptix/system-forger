@@ -39,6 +39,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Ensures `procps-ng` is installed on Fedora for `uptime` utility.
 
+- **setup_base_cli:** Install `eza`, a replacement for `ls`. For Arch Linux and
+  Ubuntu, `eza` is installed via the system package manager. For Fedora, the
+  latest stable release tarball is downloaded directly from GitHub and deployed
+  to the system, ensuring access to the latest version.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments

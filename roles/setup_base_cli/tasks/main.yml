@@ -3,3 +3,6 @@
 
 - name: Base CLI | fish
   ansible.builtin.include_tasks: ./fish.yml
+
+- name: Base CLI | eza
+  ansible.builtin.include_tasks: ./eza.yml

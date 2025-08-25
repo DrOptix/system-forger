@@ -1,0 +1,40 @@
+- name: Base CLI | eza | Ensure `eza` is installed (ArchLinux and Ubuntu)
+  become: yes
+  ansible.builtin.package:
+    name: eza
+    state: present
+  when: ansible_distribution in ['Archlinux', 'Ubuntu']
+
+- name: Base CLI | eza | Ensure `eza` is installed (Fedora)
+  block:
+    - name: Base CLI | eza | Create temporary download directory
+      ansible.builtin.file:
+        path: "/tmp/eza_download"
+        state: directory
+        mode: '0755'
+
+    - name: Base CLI | eza | Download latest `eza` release tarball
+      become: yes
+      ansible.builtin.unarchive:
+        src: https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz
+        dest: "/tmp/eza_download"
+        remote_src: yes
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Base CLI | eza | Install `eza` binary to target directory
+      ansible.builtin.copy:
+        src: "/tmp/eza_download/eza"
+        dest: "/usr/bin/eza"
+        remote_src: yes
+        owner: root
+        group: root
+        mode: "0755"
+      become: yes
+
+    - name: Base CLI | eza | Cleanup temporary download directory
+      ansible.builtin.file:
+        path: "/tmp/eza_download"
+        state: absent
+  when: ansible_distribution in ['Fedora']
