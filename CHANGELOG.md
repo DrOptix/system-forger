@@ -66,3 +66,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   These scripts provide direct, streamlined access to a clean container shell
   for manual testing without complex setup or background processes.
+
+- **setup_base_cli:** Grouped role files per task. The `files/` directory is now
+  structured to organize static configuration files into subdirectories
+  corresponding to the task files that deploy them, improving maintainability.

@@ -6,7 +6,7 @@
 
 - name: Base CLI | bat | Deploy `fish` functions for `bat`
   ansible.builtin.copy:
-    src: ".config/fish/functions/{{ item }}"
+    src: "bat/fish/functions/{{ item }}"
     dest: "{{ target_user_info.home }}/.config/fish/{{ item }}"
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"

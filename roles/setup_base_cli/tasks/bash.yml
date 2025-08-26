@@ -6,7 +6,7 @@
 
 - name: Base CLI | bash | Deploy `$HOME/.bashrc`
   ansible.builtin.copy:
-    src: .bashrc
+    src: bash/.bashrc
     dest: "{{ target_user_info.home }}/.bashrc"
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"

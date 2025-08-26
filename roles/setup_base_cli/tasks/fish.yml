@@ -38,7 +38,7 @@
 
 - name: Base CLI | fish | Deploy custom `fish` functions
   ansible.builtin.copy:
-    src: ".config/fish/functions/{{ item }}"
+    src: "fish/functions/{{ item }}"
     dest: "{{ target_user_info.home }}/.config/fish/functions/{{ item }}"
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"
