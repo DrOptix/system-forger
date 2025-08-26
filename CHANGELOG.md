@@ -63,6 +63,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   These functions provide enhanced directory listings, robustly fall back to
   `command ls` if `eza` is not found, and include comprehensive documentation.
 
+- **setup_base_cli:** Implemented `fd` as a modern `find` replacement. This adds
+  `fd` to the system (handling `fdfind` on Ubuntu), deploys a custom ignore file
+  (`~/.config/fd/ignore`) that disables finding inside `.git` directories.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments

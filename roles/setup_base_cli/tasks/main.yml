@@ -9,3 +9,6 @@
 
 - name: Base CLI | bat
   ansible.builtin.include_tasks: ./bat.yml
+
+- name: Base CLI | fd
+  ansible.builtin.include_tasks: ./fd.yml
