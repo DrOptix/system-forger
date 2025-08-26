@@ -1,0 +1,16 @@
+- name: Base CLI | bat | Ensure `bat` is installed
+  become: yes
+  ansible.builtin.package:
+    name: bat
+    state: present
+
+- name: Base CLI | bat | Deploy `fish` functions for `bat`
+  ansible.builtin.copy:
+    src: ".config/fish/functions/{{ item }}"
+    dest: "{{ target_user_info.home }}/.config/fish/{{ item }}"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+  loop:
+    - "cat.fish"
+    - "bat.fish"

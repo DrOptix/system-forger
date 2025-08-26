@@ -48,6 +48,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   install `eza` if it is missing from the system. We check the existance of
   `/usr/bin/eza` binary.
 
+- **setup_base_cli:** Install `bat`, a modern `cat` replacement. This adds `bat`
+  to the system and deploys `fish` functions (`cat.fish`, `bat.fish`) that
+  override the default `cat` command for an enhanced viewing experience (syntax
+  highlighting, line numbers, `git` integration).
+
+  The functions automatically handle `batcat` on Ubuntu, and fall back to
+  original `cat` if needed.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments

@@ -6,3 +6,6 @@
 
 - name: Base CLI | eza
   ansible.builtin.include_tasks: ./eza.yml
+
+- name: Base CLI | bat
+  ansible.builtin.include_tasks: ./bat.yml
