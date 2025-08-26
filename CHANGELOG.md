@@ -56,6 +56,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   The functions automatically handle `batcat` on Ubuntu, and fall back to
   original `cat` if needed.
 
+- **setup_base_cli:** Implemented `eza` aliases as `fish` functions: `ls`, `la`,
+  `ll`, `lla`. This leverages `eza` as a modern replacement for `ls` and its
+  common aliases.
+
+  These functions provide enhanced directory listings, robustly fall back to
+  `command ls` if `eza` is not found, and include comprehensive documentation.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments

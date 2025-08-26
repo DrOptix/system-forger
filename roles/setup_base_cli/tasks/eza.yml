@@ -48,3 +48,16 @@
         state: absent
       when: "not eza_status.stat.exists"
   when: ansible_distribution in ['Fedora']
+
+- name: Base CLI | eza | Deploy `eza` custom `fish` functions
+  ansible.builtin.copy:
+    src: "eza/fish/functions/{{ item }}"
+    dest: "{{ target_user_info.home }}/.config/fish/functions/{{ item }}"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+  loop:
+    - "ls.fish"
+    - "la.fish"
+    - "ll.fish"
+    - "lla.fish"
