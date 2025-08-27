@@ -15,3 +15,6 @@
 
 - name: Base CLI | ripgrep
   ansible.builtin.include_tasks: ./ripgrep.yml
+
+- name: Base CLI | btop
+  ansible.builtin.include_tasks: ./btop.yml

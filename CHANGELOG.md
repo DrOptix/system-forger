@@ -72,6 +72,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   overrides the default `grep` command for enhanced content searching, with a
   fallback to `command grep` if `rg` is not present.
 
+- **setup_base_cli:** Install `btop` utility for enhanced process monitoring.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments
