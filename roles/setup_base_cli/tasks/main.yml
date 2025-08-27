@@ -1,0 +1,20 @@
+- name: Base CLI | bash
+  ansible.builtin.include_tasks: ./bash.yml
+
+- name: Base CLI | fish
+  ansible.builtin.include_tasks: ./fish.yml
+
+- name: Base CLI | eza
+  ansible.builtin.include_tasks: ./eza.yml
+
+- name: Base CLI | bat
+  ansible.builtin.include_tasks: ./bat.yml
+
+- name: Base CLI | fd
+  ansible.builtin.include_tasks: ./fd.yml
+
+- name: Base CLI | ripgrep
+  ansible.builtin.include_tasks: ./ripgrep.yml
+
+- name: Base CLI | btop
+  ansible.builtin.include_tasks: ./btop.yml

@@ -1,0 +1,15 @@
+- name: Base CLI | ripgrep | Ensure `ripgrep` is installed
+  become: yes
+  ansible.builtin.package:
+    name: ripgrep
+    state: present
+
+- name: Base CLI | ripgrep | Deploy `fish` functions for `grep`
+  ansible.builtin.copy:
+    src: "ripgrep/{{ item }}"
+    dest: "{{ target_user_info.home }}/{{ item }}"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+  loop:
+    - .config/fish/functions/grep.fish

@@ -1,0 +1,5 @@
+- name: Base CLI | btop | Ensure `btop` is installed
+  become: yes
+  ansible.builtin.package:
+    name: btop
+    state: present

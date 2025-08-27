@@ -1,0 +1,32 @@
+- name: Base CLI | fd | Ensure `fd` is installed (Fedora, Ubuntu)
+  become: yes
+  ansible.builtin.package:
+    name: fd-find
+    state: present
+  when: ansible_distribution in ["Fedora", "Ubuntu"]
+
+- name: Base CLI | fd | Ensure `fd` is installed (ArchLinux)
+  become: yes
+  ansible.builtin.package:
+    name: fd
+    state: present
+  when: ansible_distribution in ["Archlinux"]
+
+- name: Base CLI | fd | Ensure `fd` configuration directory exists
+  ansible.builtin.file:
+    path: "{{ target_user_info.home }}/.config/fd/"
+    state: directory
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: '0755'
+
+- name: Base CLI | fd | Deploy `fish` functions for `fd`
+  ansible.builtin.copy:
+    src: "fd/{{ item }}"
+    dest: "{{ target_user_info.home }}/{{ item }}"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+  loop:
+    - .config/fd/ignore
+    - .config/fish/functions/fd.fish

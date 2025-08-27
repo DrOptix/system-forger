@@ -1,0 +1,48 @@
+- name: Base CLI | fish | Ensure `fish` is installed
+  become: yes
+  ansible.builtin.package:
+    name: fish
+    state: present
+
+- name: Base CLI | fish | Ensure `hostname` is installed (Fedora and Ubuntu)
+  become: yes
+  ansible.builtin.package:
+    name: hostname
+    state: present
+  when: ansible_distribution in ['Ubuntu', 'Fedora']
+
+- name: Base CLI | fish | Ensure `hostname` is installed (ArchLinux)
+  become: yes
+  ansible.builtin.package:
+    name: inetutils
+    state: present
+  when: ansible_distribution in ['Archlinux']
+
+- name: Base CLI | fish | Ensure `uptime` is installed (Fedora)
+  become: yes
+  ansible.builtin.package:
+    name: procps-ng
+    state: present
+  when: ansible_distribution in ['Fedora']
+
+- name: Base CLI | fish | Ensure `fish` directories exists
+  ansible.builtin.file:
+    path: "{{ target_user_info.home }}/.config/fish/{{ item }}/"
+    state: directory
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: '0755'
+  loop:
+    - "conf.d"
+    - "functions"
+
+- name: Base CLI | fish | Deploy custom `fish` functions
+  ansible.builtin.copy:
+    src: "fish/functions/{{ item }}"
+    dest: "{{ target_user_info.home }}/.config/fish/functions/{{ item }}"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+  loop:
+    - "fish_prompt.fish"
+    - "fish_greeting.fish"
