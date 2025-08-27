@@ -88,3 +88,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **setup_base_cli:** Grouped role files per task. The `files/` directory is now
   structured to organize static configuration files into subdirectories
   corresponding to the task files that deploy them, improving maintainability.
+
+### Fixed
+- **test:** `btop` execution failure in ArchLinux test containers by adding the
+  `--privileged` flag to `podman run`. This addresses the lack of `CAP_SETFCAP`
+  during `btop`'s package installation on ArchLinux.

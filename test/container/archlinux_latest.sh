@@ -22,6 +22,7 @@ function run_container() {
     local full_container_command="$install_sudo_command && exec $container_shell"
 
     podman run -it --rm \
+        --privileged \
         -v "$ABSOLUTE_ANSIBLE_PROJECT_ROOT:$CONTAINER_MOUNT_PATH:ro,Z" \
         "$CONTAINER_IMAGE" \
         sh -c "${full_container_command}"
