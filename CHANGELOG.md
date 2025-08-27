@@ -67,6 +67,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   `fd` to the system (handling `fdfind` on Ubuntu), deploys a custom ignore file
   (`~/.config/fd/ignore`) that disables finding inside `.git` directories.
 
+- **setup_base_cli:** Implemented `ripgrep` (`rg`) as a modern `grep`
+  replacement. This installs `ripgrep` and deploys a `fish` function that
+  overrides the default `grep` command for enhanced content searching, with a
+  fallback to `command grep` if `rg` is not present.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments

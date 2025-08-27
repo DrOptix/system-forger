@@ -12,3 +12,6 @@
 
 - name: Base CLI | fd
   ansible.builtin.include_tasks: ./fd.yml
+
+- name: Base CLI | ripgrep
+  ansible.builtin.include_tasks: ./ripgrep.yml
