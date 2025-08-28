@@ -16,9 +16,17 @@ ABSOLUTE_ANSIBLE_PROJECT_ROOT="$(realpath -s "$SCRIPT_DIR/../..")"
 
 function run_container() {
     echo "[$SCRIPT_NAME] Start interactive shell in a disposable Fedora 42 container."
+
+    local container_commands=(
+        "pushd /opt/system-forger/ >/dev/null;"
+        "./bootstrap.sh;"
+        "exec bash;"
+        "popd >/dev/null"
+    )
+
     podman run -it --rm \
         -v "$ABSOLUTE_ANSIBLE_PROJECT_ROOT:$CONTAINER_MOUNT_PATH:ro,Z" \
-        "$CONTAINER_IMAGE"
+        "$CONTAINER_IMAGE" bash -c "${container_commands[*]}"
 }
 
 function main() {

@@ -17,15 +17,18 @@ ABSOLUTE_ANSIBLE_PROJECT_ROOT="$(realpath -s "$SCRIPT_DIR/../..")"
 function run_container() {
     echo "[$SCRIPT_NAME] Start interactive shell in a disposable ArchLinux latest container."
 
-    local install_sudo_command="pacman -Sy --noconfirm --needed sudo"
-    local container_shell="bash"
-    local full_container_command="$install_sudo_command && exec $container_shell"
+    local container_commands=(
+        "pacman -Sy --noconfirm --needed sudo;"
+        "pushd /opt/system-forger/ >/dev/null;"
+        "./bootstrap.sh;"
+        "exec bash;"
+        "popd >/dev/null"
+    )
 
     podman run -it --rm \
         --privileged \
         -v "$ABSOLUTE_ANSIBLE_PROJECT_ROOT:$CONTAINER_MOUNT_PATH:ro,Z" \
-        "$CONTAINER_IMAGE" \
-        sh -c "${full_container_command}"
+        "$CONTAINER_IMAGE" bash -c "${container_commands[*]}"
 }
 
 function main() {
