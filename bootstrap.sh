@@ -5,6 +5,7 @@ SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 SYSTEM_FORGER_BRANCH="${SYSTEM_FORGER_BRANCH:-master}"
+SYSTEM_FORGER_REPO_PATH="$HOME/.local/share/system-forger"
 
 # --- Package Manager Helper Functions ---
 
@@ -93,19 +94,51 @@ function install_packages() {
     fi
 }
 
+# --- Clean and Clone Repository Function ---
+
+# clean_and_clone: Removes an existing system-forger repo and clones a fresh one.
+# Arguments: 1 - The git branch to checkout (defaults to master if not provided).
 function clean_and_clone() {
-    local branch=$1
+    # Default to 'master' if no branch is specified.
+    local branch="${1:-master}"
 
-    echo "[$SCRIPT_NAME] Removing old system-forger installation"
+    echo "[$SCRIPT_NAME] Removing existing system-forger installation at '$SYSTEM_FORGER_REPO_PATH'..."
 
-    rm -rf "$HOME/.local/share/system-forger"
-    git clone https://github.com/DrOptix/system-forger.git "$HOME/.local/share/system-forger" >/dev/null
+    rm -rf "$SYSTEM_FORGER_REPO_PATH" || {
+        echo "[$SCRIPT_NAME] Warning: Failed to fully remove old installation at '$SYSTEM_FORGER_REPO_PATH'." >&2
+    }
 
-    # Checkout custom branch only if different than "master"
-    if [[ $branch != "master" ]]; then
-        pushd "$HOME/.local/share/system-forger"
-        git fetch origin "$branch" && git checkout "$banch"
+    echo "[$SCRIPT_NAME] Cloning system-forger repository (branch: $branch) into '$SYSTEM_FORGER_REPO_PATH'..."
+    git clone "https://github.com/DrOptix/system-forger.git" "$SYSTEM_FORGER_REPO_PATH" || {
+        echo "[$SCRIPT_NAME] Error: Failed to clone repository." >&2
+        exit 1
+    }
+
+    if [[ "$branch" == "master" ]]; then
+        echo "[$SCRIPT_NAME] Repository remains on 'master' branch (no custom branch specified)."
+    else
+        echo "[$SCRIPT_NAME] Checking out custom branch: $branch"
+
+        pushd "$SYSTEM_FORGER_REPO_PATH" || {
+            echo "[$SCRIPT_NAME] Error: Failed to enter repository directory '$SYSTEM_FORGER_REPO_PATH'." >&2
+            exit 1
+        }
+
+        git fetch origin "$branch" || {
+            echo "[$SCRIPT_NAME] Error: Failed to fetch branch '$branch'." >&2
+            popd
+            exit 1
+        }
+
+        git checkout "$branch" || {
+            echo "[$SCRIPT_NAME] Error: Failed to checkout branch '$branch'." >&2
+            popd
+            exit 1
+        }
+
         popd
+
+        echo "[$SCRIPT_NAME] Repository successfully checked out to branch '$branch'."
     fi
 }
 
