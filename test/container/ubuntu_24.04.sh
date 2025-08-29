@@ -17,15 +17,19 @@ ABSOLUTE_ANSIBLE_PROJECT_ROOT="$(realpath -s "$SCRIPT_DIR/../..")"
 function run_container() {
     echo "[$SCRIPT_NAME] Start interactive shell in a disposable Ubuntu 24.04 container."
 
-    local install_sudo_command="DEBIAN_FRONTEND=noninteractive apt-get update && \
-                                 DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends sudo"
-    local container_shell="bash"
-    local full_container_command="$install_sudo_command && exec $container_shell"
+    local container_commands=(
+        "export DEBIAN_FRONTEND=noninteractive;"
+        "apt-get update;"
+        "apt-get install -y --no-install-recommends sudo;"
+        "pushd /opt/system-forger/ >/dev/null;"
+        "./scripts/bootstrap.sh;"
+        "exec bash;"
+        "popd >/dev/null"
+    )
 
     podman run -it --rm \
         -v "$ABSOLUTE_ANSIBLE_PROJECT_ROOT:$CONTAINER_MOUNT_PATH:ro,Z" \
-        "$CONTAINER_IMAGE" \
-        sh -c "${full_container_command}"
+        "$CONTAINER_IMAGE" bash -c "${container_commands[*]}"
 }
 
 function main() {
