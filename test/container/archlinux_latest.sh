@@ -20,7 +20,7 @@ function run_container() {
     local container_commands=(
         "pacman -Sy --noconfirm --needed sudo;"
         "pushd /opt/system-forger/ >/dev/null;"
-        "./bootstrap.sh;"
+        "./scripts/bootstrap.sh;"
         "exec bash;"
         "popd >/dev/null"
     )

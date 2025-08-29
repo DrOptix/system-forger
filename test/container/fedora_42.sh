@@ -19,7 +19,7 @@ function run_container() {
 
     local container_commands=(
         "pushd /opt/system-forger/ >/dev/null;"
-        "./bootstrap.sh;"
+        "./scripts/bootstrap.sh;"
         "exec bash;"
         "popd >/dev/null"
     )

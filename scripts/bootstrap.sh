@@ -145,6 +145,8 @@ function clean_and_clone() {
 function main() {
     install_packages git ansible
     clean_and_clone "$SYSTEM_FORGER_BRANCH"
+
+    $SCRIPT_DIR/install.sh
 }
 
 main "$@"

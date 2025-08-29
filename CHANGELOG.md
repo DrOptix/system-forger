@@ -74,6 +74,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **setup_base_cli:** Install `btop` utility for enhanced process monitoring.
 
+- **scripts:** Introduced the `./scripts` directory to hold all the scripts.
+  This included moving `bootstrap.sh` into `./scripts/` and adding `install.sh`.
+
+  The new `install.sh` script simplifies calling `ansible-playbook` defaulting
+  to the `wsl` playbook and the user who runs the script.
+
+  Now `bootstrap.sh` automatically runs `install.sh`.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments

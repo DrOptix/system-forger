@@ -22,7 +22,7 @@ function run_container() {
         "apt-get update;"
         "apt-get install -y --no-install-recommends sudo;"
         "pushd /opt/system-forger/ >/dev/null;"
-        "./bootstrap.sh;"
+        "./scripts/bootstrap.sh;"
         "exec bash;"
         "popd >/dev/null"
     )
