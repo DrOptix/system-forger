@@ -114,3 +114,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **test:** `btop` execution failure in ArchLinux test containers by adding the
   `--privileged` flag to `podman run`. This addresses the lack of `CAP_SETFCAP`
   during `btop`'s package installation on ArchLinux.
+
+- **setup_base_cli:** Corrected an issue where 'fish' would not launch within
+  new 'tmux' panes by explicitly unsetting the 'FISH_IS_RUNNING' environment
+  variable in 'tmux.conf'.
