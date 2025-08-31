@@ -84,7 +84,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **setup_base_cli:** Integrated 'tmux' with an XDG-compliant configuration
   for terminal multiplexing, including essential keybindings, Vim-mode
-  features, and Wayland clipboard support.
+
+- **setup_base_cli:** Configured 'fish' to automatically launch as the
+  interactive shell from 'bash' via a new '~/.bashrc.d/99-launch-fish.sh'
+  script. This provides the 'fish' experience for interactive sessions
+  while keeping 'bash' as the login shell.
+
+- **setup_base_cli:** Refactored the internal file organization for 'fish'
+  configuration within the Ansible role, ensuring source paths align with
+  their XDG-compliant deployment destinations. features, and Wayland clipboard
+  support.
 
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive

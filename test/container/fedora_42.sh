@@ -20,13 +20,13 @@ function run_container() {
     local container_commands=(
         "pushd /opt/system-forger/ >/dev/null;"
         "./scripts/bootstrap.sh;"
-        "exec bash;"
+        "exec bash -i;"
         "popd >/dev/null"
     )
 
     podman run -it --rm \
         -v "$ABSOLUTE_ANSIBLE_PROJECT_ROOT:$CONTAINER_MOUNT_PATH:ro,Z" \
-        "$CONTAINER_IMAGE" bash -c "${container_commands[*]}"
+        "$CONTAINER_IMAGE" bash -ic "${container_commands[*]}"
 }
 
 function main() {
