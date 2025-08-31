@@ -82,6 +82,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Now `bootstrap.sh` automatically runs `install.sh`.
 
+- **setup_base_cli:** Integrated 'tmux' with an XDG-compliant configuration
+  for terminal multiplexing, including essential keybindings, Vim-mode
+  features, and Wayland clipboard support.
+
 ### Changed
 - **test:** Introduced simplified scripts for launching disposable interactive
   shell environments
