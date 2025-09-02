@@ -22,7 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   including pre-tasks to handle user details.
 
 - **setup_base_cli:** Implemented basic `bash` shell setup, sets up a modular
-  `~/.bashrc`, and creates the `~/.bashrc.d/` directory.
+  `~/.bashrc`, and creates the `~/.bashrc.d/` directory. In addition for
+  platforms that are first looking for `~/.bash_profile` a simple implementation
+  was added that just sources `~/.bashrc`.
 
   Playbooks now use this new role.
 
