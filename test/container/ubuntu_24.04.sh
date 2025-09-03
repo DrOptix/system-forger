@@ -14,8 +14,31 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 # Calculate the absolute path to the Ansible project root.
 ABSOLUTE_ANSIBLE_PROJECT_ROOT="$(realpath -s "$SCRIPT_DIR/../..")"
 
+function generate_selective_volume_mounts() {
+    local host_base_path="$1"
+    local container_base_path="$2"
+    local mounts_array=()
+
+    for item in "$host_base_path"/* "$host_base_path"/.*; do
+        local item_basename="$(basename "$item")"
+
+        if [[ "$item_basename" == "." || "$item_basename" == ".." || "$item_basename" == ".git" ]]; then
+            continue
+        fi
+
+        mounts_array+=("-v" "$item:$container_base_path/$item_basename:ro,Z")
+    done
+
+    # Output the array elements
+    echo "${mounts_array[@]}"
+}
+
 function run_container() {
     echo "[$SCRIPT_NAME] Start interactive shell in a disposable Ubuntu 24.04 container."
+
+    local mounts=$(generate_selective_volume_mounts \
+        "$ABSOLUTE_ANSIBLE_PROJECT_ROOT" \
+        "$CONTAINER_MOUNT_PATH")
 
     local container_commands=(
         "export DEBIAN_FRONTEND=noninteractive;"
@@ -28,7 +51,7 @@ function run_container() {
     )
 
     podman run -it --rm \
-        -v "$ABSOLUTE_ANSIBLE_PROJECT_ROOT:$CONTAINER_MOUNT_PATH:ro,Z" \
+        $mounts \
         "$CONTAINER_IMAGE" bash -ic "${container_commands[*]}"
 }
 
