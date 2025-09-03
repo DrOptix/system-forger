@@ -122,3 +122,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **setup_base_cli:** Corrected an issue where 'fish' would not launch within
   new 'tmux' panes by explicitly unsetting the 'FISH_IS_RUNNING' environment
   variable in 'tmux.conf'.
+
+- **setup_base_cli:** Fixed RGB colors rendering in `tmux` panes running inside
+  containers.
