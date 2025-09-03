@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# This script is the primary entry point for applying Ansible playbooks.
+# This script is the primary entry point for applying the 'workstation' Ansible
+# playbook.
+#
 # It can be called directly or from 'bootstrap.sh'. It's designed to be
 # safely repeatable to apply or update system configurations.
 
@@ -17,14 +19,11 @@ popd () { command popd "$@" >/dev/null; }
 
 # --- Main Function ---
 # Arguments:
-#   1 (Optional): Playbook name (e.g., "wsl", "workstation"). Defaults to "wsl".
-#   2 (Optional): Target user for Ansible provisioning. Defaults to the current user.
+#   1 (Optional): Target user for Ansible provisioning. Defaults to the current user.
 function main() {
-    local playbook_name="${1:-"wsl"}"
-    local target_user="${2:-$(whoami)}"
+    local target_user="${1:-$(whoami)}"
 
     echo "[$SCRIPT_NAME] Starting Ansible provisioning."
-    echo "[$SCRIPT_NAME] Target Playbook: $playbook_name.yml"
     echo "[$SCRIPT_NAME] Provisioning for user: $target_user"
 
     # Ensure we are in the root of the 'system-forger' repository for Ansible
@@ -33,7 +32,8 @@ function main() {
         exit 1
     }
 
-    local main_playbook_path="./playbooks/$playbook_name.yml"
+    local playbook_name="workstation"
+    local main_playbook_path="$SYSTEM_FORGER_REPO_ROOT/playbooks/$playbook_name.yml"
     if [[ ! -f "$main_playbook_path" ]]; then
         echo "[$SCRIPT_NAME] Error: Playbook '$main_playbook_path' not found in repository root." >&2
         popd; exit 1
