@@ -12,11 +12,14 @@
         name: "{{ target_user }}"
       register: target_user_info
       check_mode: true
+      tags: ["always"]
 
     - name: "Pre-Tasks | Fail if target user '{{ target_user }}' does not exist"
       ansible.builtin.fail:
         msg: "Target user '{{ target_user }}' does not exist on this system."
       when: not target_user_info
+      tags: ["always"]
 
   roles:
     - role: setup_base_cli
+      tags: ["base_cli"]
