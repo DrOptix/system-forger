@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 
-# This script is the primary entry point for applying Ansible playbooks.
+# This script is the primary entry point for applying the 'workstation' Ansible
+# playbook.
+#
 # It can be called directly or from 'bootstrap.sh'. It's designed to be
 # safely repeatable to apply or update system configurations.
 
@@ -17,15 +19,41 @@ popd () { command popd "$@" >/dev/null; }
 
 # --- Main Function ---
 # Arguments:
-#   1 (Optional): Playbook name (e.g., "wsl", "workstation"). Defaults to "wsl".
-#   2 (Optional): Target user for Ansible provisioning. Defaults to the current user.
+#   1 (Optional): Target user for Ansible provisioning. Defaults to the current user.
 function main() {
-    local playbook_name="${1:-"wsl"}"
-    local target_user="${2:-$(whoami)}"
+    local target_user="$(whoami)"
+    local ansible_tags=""
+
+    # Parse command line arguments
+    while [[ "$#" -gt 0 ]]; do
+        case "$1" in
+            -u|--user)
+                if [[ -n "$2" && "$2" != --* ]]; then
+                    target_user="$2"
+                    shift
+                else
+                    echo "[$SCRIPT_NAME] Error: '--user' requires an argument." >&2; exit 1
+                fi
+                ;;
+            -t|--tags)
+                if [[ -n "$2" && "$2" != --* ]]; then
+                    ansible_tags="$2"
+                    shift
+                else
+                    echo "[$SCRIPT_NAME] Error: '--tags' requires an argument." >&2; exit 1
+                fi
+                ;;
+            *)
+                echo "[$SCRIPT_NAME] Error: Unknown argument '$1'." >&2
+                echo "Usage: $SCRIPT_NAME [--user <username>] [--tags <tag1,tag2>]" >&2
+                exit 1
+                ;;
+        esac
+        shift
+    done
 
     echo "[$SCRIPT_NAME] Starting Ansible provisioning."
-    echo "[$SCRIPT_NAME] Target Playbook: $playbook_name.yml"
-    echo "[$SCRIPT_NAME] Provisioning for user: $target_user"
+    echo "[$SCRIPT_NAME] Provisioning for user: '$target_user'"
 
     # Ensure we are in the root of the 'system-forger' repository for Ansible
     pushd "$SYSTEM_FORGER_REPO_ROOT" || {
@@ -33,7 +61,8 @@ function main() {
         exit 1
     }
 
-    local main_playbook_path="./playbooks/$playbook_name.yml"
+    local playbook_name="workstation"
+    local main_playbook_path="$SYSTEM_FORGER_REPO_ROOT/playbooks/$playbook_name.yml"
     if [[ ! -f "$main_playbook_path" ]]; then
         echo "[$SCRIPT_NAME] Error: Playbook '$main_playbook_path' not found in repository root." >&2
         popd; exit 1
@@ -43,6 +72,14 @@ function main() {
         --inventory localhost \
         --connection local \
         --extra-vars "target_user=$target_user")
+
+     # Add tags if provided.
+     if [[ -n "$ansible_tags" ]]; then
+         echo "[$SCRIPT_NAME] Running with Ansible tags: '$ansible_tags'"
+         ansible_cmd+=(--tags "$ansible_tags")
+     else
+         echo "[$SCRIPT_NAME] Running entire playbook (no tags specified)."
+     fi
 
     # Handle become password logic based on whether the script is running as
     # 'root' or if the 'root' / 'sudo' password is provideded and no input from

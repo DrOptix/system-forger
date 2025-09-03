@@ -114,6 +114,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   structured to organize static configuration files into subdirectories
   corresponding to the task files that deploy them, improving maintainability.
 
+- **playbooks:** Consolidated playbook architecture from separate 'workstation'
+  and 'wsl' playbooks into a single 'workstation.yml' for improved testing
+  efficiency and maintainability.
+
 ### Fixed
 - **test:** `btop` execution failure in ArchLinux test containers by adding the
   `--privileged` flag to `podman run`. This addresses the lack of `CAP_SETFCAP`
