@@ -19,3 +19,18 @@
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"
     mode: "0644"
+
+- name: Base CLI | tmux | Ensure TPM is installed
+  ansible.builtin.git:
+    repo: "https://github.com/tmux-plugins/tpm"
+    dest: "{{ target_user_info.home }}/.tmux/plugins/tpm"
+    version: "master"
+    single_branch: yes
+  register: tpm_clone_result
+  changed_when: "tpm_clone_result.changed"
+
+- name: Base CLI | tmux | Install TPM plugins
+  ansible.builtin.command:
+    cmd: '{{ target_user_info.home }}/.tmux/plugins/tpm/bin/install_plugins'
+  register: tpm_install_result
+  changed_when: "'Installing' in tpm_install_result.stdout"

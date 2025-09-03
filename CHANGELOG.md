@@ -84,8 +84,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
   Now `bootstrap.sh` automatically runs `install.sh`.
 
-- **setup_base_cli:** Integrated 'tmux' with an XDG-compliant configuration
-  for terminal multiplexing, including essential keybindings, Vim-mode
+- **setup_base_cli:** Integrated `tmux` with an XDG-compliant configuration
+  for terminal multiplexing, including essential keybindings, Vim-mode.
+  Navigation between panes is done using `Ctrl-{h, j, k , l}`. The `tmux`
+  plugins are automatically installed.
 
 - **setup_base_cli:** Configured 'fish' to automatically launch as the
   interactive shell from 'bash' via a new '~/.bashrc.d/99-launch-fish.sh'
