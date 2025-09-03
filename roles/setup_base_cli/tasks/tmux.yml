@@ -1,0 +1,36 @@
+- name: Base CLI | tmux | Ensure 'tmux' is installed
+  become: yes
+  ansible.builtin.package:
+    name: tmux
+    state: present
+
+- name: Base CLI | tmux | Ensure `$HOME/.config/tmux/` directory exists
+  ansible.builtin.file:
+    path: "{{ target_user_info.home }}/.config/tmux/"
+    state: directory
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: '0755'
+
+- name: Base CLI | tmux | Deploy '$HOME/.config/tmux/tmux.conf'
+  ansible.builtin.copy:
+    src: tmux/.config/tmux/tmux.conf
+    dest: "{{ target_user_info.home }}/.config/tmux/tmux.conf"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+
+- name: Base CLI | tmux | Ensure TPM is installed
+  ansible.builtin.git:
+    repo: "https://github.com/tmux-plugins/tpm"
+    dest: "{{ target_user_info.home }}/.tmux/plugins/tpm"
+    version: "master"
+    single_branch: yes
+  register: tpm_clone_result
+  changed_when: "tpm_clone_result.changed"
+
+- name: Base CLI | tmux | Install TPM plugins
+  ansible.builtin.command:
+    cmd: '{{ target_user_info.home }}/.tmux/plugins/tpm/bin/install_plugins'
+  register: tpm_install_result
+  changed_when: "'Installing' in tpm_install_result.stdout"

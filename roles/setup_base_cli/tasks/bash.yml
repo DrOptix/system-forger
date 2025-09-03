@@ -7,10 +7,13 @@
 - name: Base CLI | bash | Deploy `$HOME/.bashrc`
   ansible.builtin.copy:
     src: bash/.bashrc
-    dest: "{{ target_user_info.home }}/.bashrc"
+    dest: "{{ target_user_info.home }}/{{ item }}"
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"
     mode: "0644"
+  loop:
+    - ".bashrc"
+    - ".bash_profile"
 
 - name: Base CLI | bash | Ensure `$HOME/.bashrc.d/` directory exists
   ansible.builtin.file:
