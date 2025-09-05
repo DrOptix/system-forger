@@ -1,3 +1,5 @@
+# The task itself needs 'tmux', therefore we don't defer the installation at the
+# end of 'main'. We do it here.
 - name: Base CLI | tmux | Ensure 'tmux' is installed
   become: yes
   ansible.builtin.package:

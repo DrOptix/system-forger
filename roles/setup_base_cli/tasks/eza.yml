@@ -1,8 +1,6 @@
-- name: Base CLI | eza | Ensure `eza` is installed (ArchLinux and Ubuntu)
-  become: yes
-  ansible.builtin.package:
-    name: eza
-    state: present
+- name: Base CLI | eza | Mark 'eza' to be installed (ArchLinux, Ubuntu)
+  ansible.builtin.set_fact:
+    packages_to_install: "{{ packages_to_install + ['eza'] }}"
   when: ansible_distribution in ['Archlinux', 'Ubuntu']
 
 - name: Base CLI | eza | Ensure `eza` is installed (Fedora)
