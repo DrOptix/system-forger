@@ -137,3 +137,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   definitions. The content of `cat.fish` and `bat.fish` were swapped to ensure
   each file defines its intended function, fixing the `bat` integration as a
   modern `cat` replacement.
+
+- **setup_base_cli:** Resolved an infinite recursion bug in `bat`/`cat` `fish`
+  functions by explicitly using the `command` built-in for binary invocations
+  and `type -f -q` for existence checks. `bat.fish` now falls back to
+  `command cat` if `bat` binaries are not found.

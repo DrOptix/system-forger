@@ -16,17 +16,17 @@
 #          forwarded to 'bat', 'batcat', or 'command cat'.
 #
 # Examples:
-#   cat myfile.txt              # Displays file with syntax highlighting.
-#   cat -p raw.log              # Displays file without highlighting (plain output).
-#   cat file1.txt file2.txt     # Concatenates multiple files with 'bat'.
+#   cat myfile.txt              # Displays file with syntax highlighting (via 'bat').
+#   cat -p raw.log              # Displays file without highlighting (via 'bat' plain output).
+#   cat file1.txt file2.txt     # Concatenates multiple files (via 'bat').
 #   cat <(command history)      # Pipes output to 'bat'.
 #
-# See also: 'bat (function)', 'batcat'
+# See also: 'bat (command)', 'batcat'
 function cat --description "View file contents with modern enhancements ('bat'/'batcat')."
-    if type -q batcat
-        batcat $argv
-    else if type -q bat
-        bat $argv
+    if type -f -q batcat
+        command batcat $argv
+    else if type -f -q bat
+        command bat $argv
     else
         command cat $argv
     end

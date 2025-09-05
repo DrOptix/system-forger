@@ -16,11 +16,13 @@
 #   bat --paging=never log.txt  # Views log without automatically piping to a
 #                               # pager.
 #
-# See also: 'cat (function)', 'batcat'
+# See also: 'batcat'
 function bat --description "Invoke the modern 'bat' file viewer (resolves 'batcat' if needed)."
-    if type -q batcat
-        batcat $argv
-    else if type -q bat
-        bat $argv
+    if type -f -q batcat
+        command batcat $argv
+    else if type -f -q bat
+        command bat $argv
+    else
+        command cat $argv
     end
 end
