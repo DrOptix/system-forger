@@ -1,3 +1,9 @@
+- name: Base CLI | Initialize package list
+  ansible.builtin.set_fact:
+    packages_to_install: []
+  tags:
+    - always
+
 - name: Base CLI | bash
   ansible.builtin.include_tasks: ./bash.yml
 
@@ -21,3 +27,12 @@
 
 - name: Base CLI | btop
   ansible.builtin.include_tasks: ./btop.yml
+
+- name: Base CLI | Install all base packages
+  become: yes
+  ansible.builtin.package:
+    name: "{{ packages_to_install | unique }}"
+    state: present
+  when: packages_to_install | length > 0
+  tags:
+    - always

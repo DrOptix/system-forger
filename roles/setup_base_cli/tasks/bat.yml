@@ -1,8 +1,6 @@
-- name: Base CLI | bat | Ensure `bat` is installed
-  become: yes
-  ansible.builtin.package:
-    name: bat
-    state: present
+- name: Base CLI | bat | Mark 'bat' to be installed
+  ansible.builtin.set_fact:
+    packages_to_install: "{{ packages_to_install + ['bat'] }}"
 
 - name: Base CLI | bat | Deploy `fish` functions for `bat`
   ansible.builtin.copy:

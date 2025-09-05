@@ -1,21 +1,15 @@
-- name: Base CLI | fish | Ensure `fish` is installed
-  become: yes
-  ansible.builtin.package:
-    name: fish
-    state: present
+- name: Base CLI | fish | Mark 'fish' to be installed
+  ansible.builtin.set_fact:
+    packages_to_install: "{{ packages_to_install + ['fish'] }}"
 
-- name: Base CLI | fish | Ensure `hostname` is installed (Fedora and Ubuntu)
-  become: yes
-  ansible.builtin.package:
-    name: hostname
-    state: present
+- name: Base CLI | fish | Mark 'hostname' to be installed (Ubuntu, Fedora)
+  ansible.builtin.set_fact:
+    packages_to_install: "{{ packages_to_install + ['hostname'] }}"
   when: ansible_distribution in ['Ubuntu', 'Fedora']
 
-- name: Base CLI | fish | Ensure `hostname` is installed (ArchLinux)
-  become: yes
-  ansible.builtin.package:
-    name: inetutils
-    state: present
+- name: Base CLI | fish | Mark 'inetutils' to be installed (Ubuntu, Fedora)
+  ansible.builtin.set_fact:
+    packages_to_install: "{{ packages_to_install + ['inetutils'] }}"
   when: ansible_distribution in ['Archlinux']
 
 - name: Base CLI | fish | Ensure `uptime` is installed (Fedora)

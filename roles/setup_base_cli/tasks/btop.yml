@@ -1,5 +1,3 @@
-- name: Base CLI | btop | Ensure `btop` is installed
-  become: yes
-  ansible.builtin.package:
-    name: btop
-    state: present
+- name: Base CLI | btop | Mark 'btop' to be installed
+  ansible.builtin.set_fact:
+    packages_to_install: "{{ packages_to_install + ['btop'] }}"

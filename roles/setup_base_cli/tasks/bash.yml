@@ -1,8 +1,6 @@
-- name: Base CLI | bash | Ensure `bash` is installed
-  become: yes
-  ansible.builtin.package:
-    name: bash
-    state: present
+- name: Base CLI | bash | Mark 'bash' to be installed
+  ansible.builtin.set_fact:
+    packages_to_install: "{{ packages_to_install + ['bash'] }}"
 
 - name: Base CLI | bash | Deploy `$HOME/.bashrc`
   ansible.builtin.copy:
