@@ -132,3 +132,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **setup_base_cli:** Correctly deploy `bat` fish functions to the correct path
   of `$HOME/.config/fish/functions/`.
+
+- **setup_base_cli:** Corrected an inversion bug in `bat`/`cat` `fish` function
+  definitions. The content of `cat.fish` and `bat.fish` were swapped to ensure
+  each file defines its intended function, fixing the `bat` integration as a
+  modern `cat` replacement.

@@ -1,33 +1,26 @@
 # THIS FILE IS MANAGED BY ANSIBLE; ANY MANUAL CHANGES WILL BE LOST
 
 # Description (detailed):
-#   This function replaces the default 'cat' utility with the feature-rich 'bat'
-#   or 'batcat' (on Debian/Ubuntu systems).
+#   This function provides a consistent entry point for the 'bat' binary,
+#   automatically resolving to 'batcat' on Debian/Ubuntu systems where the
+#   executable is renamed, or to 'bat' on other systems.
 #
-#   It automatically detects which modern pager is available, providing syntax
-#   highlighting, line numbers, and `git` integration.
-#
-#   It falls back to the original 'cat' if neither modern alternative is found.
-#
-# Usage: cat [OPTIONS] [FILE...]
+# Usage: bat [OPTIONS] [FILE...]
 #
 # Arguments:
-#   $argv: All arguments passed to the 'cat' command. These are directly
-#          forwarded to 'bat', 'batcat', or 'command cat'.
+#   $argv: All arguments passed to the 'bat' command. These are directly
+#          forwarded to 'batcat' or 'command bat'.
 #
 # Examples:
-#   cat myfile.txt              # Displays file with syntax highlighting.
-#   cat -p raw.log              # Displays file without highlighting (plain output).
-#   cat file1.txt file2.txt     # Concatenates multiple files with bat.
-#   cat <(command history)      # Pipes output to bat.
+#   bat main.rs                 # Displays with syntax highlighting.
+#   bat --paging=never log.txt  # Views log without automatically piping to a
+#                               # pager.
 #
-# See also: `bat`, `batcat`
-function cat --description "View file contents with modern enhancements (`bat`/`batcat`)."
+# See also: 'cat (function)', 'batcat'
+function bat --description "Invoke the modern 'bat' file viewer (resolves 'batcat' if needed)."
     if type -q batcat
         batcat $argv
     else if type -q bat
         bat $argv
-    else
-        command cat $argv
     end
 end
