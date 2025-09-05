@@ -129,3 +129,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **setup_base_cli:** Fixed RGB colors rendering in `tmux` panes running inside
   containers.
+
+- **setup_base_cli:** Correctly deploy `bat` fish functions to the correct path
+  of `$HOME/.config/fish/functions/`.
