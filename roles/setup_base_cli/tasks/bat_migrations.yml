@@ -1,0 +1,9 @@
+- name: Base CLI | bat migrations | Cleanup wrong deployed 'bat.fish' and 'cat.fish'
+  ansible.builtin.file:
+    path: "{{ target_user_info.home }}/{{ old_file }}"
+    state: absent
+  loop:
+    - .config/fish/cat.fish
+    - .config/fish/bat.fish
+  loop_control:
+    loop_var: old_file

@@ -11,7 +11,12 @@
   ansible.builtin.include_tasks: ./eza.yml
 
 - name: Base CLI | bat
-  ansible.builtin.include_tasks: ./bat.yml
+  ansible.builtin.include_tasks: "{{ bat_tasks }}"
+  loop:
+    - bat_migrations.yml
+    - bat.yml
+  loop_control:
+    loop_var: bat_tasks
 
 - name: Base CLI | fd
   ansible.builtin.include_tasks: ./fd.yml
