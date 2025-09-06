@@ -12,25 +12,23 @@
     packages_to_install: "{{ packages_to_install + ['inetutils'] }}"
   when: "ansible_distribution in ['Archlinux']"
 
-- name: Base CLI | fish | Ensure 'uptime' is installed (Fedora)
-  become: yes
-  ansible.builtin.package:
-    name: procps-ng
-    state: present
+- name: Base CLI | fish | Mark 'uptime' to be installed (Fedora)
+  ansible.builtin.set_fact:
+    packages_to_install: "{{ packages_to_install + ['procps-ng'] }}"
   when: "ansible_distribution in ['Fedora']"
 
-- name: Base CLI | fish | Ensure 'fish' directories exists
+- name: Base CLI | fish | Ensure required directories exists
   ansible.builtin.file:
-    path: "{{ target_user_info.home }}/.config/fish/{{ item }}/"
+    path: "{{ target_user_info.home }}/{{ item }}"
     state: directory
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"
     mode: "0755"
   loop:
-    - conf.d
-    - functions
+    - .config/fish/conf.d/
+    - .config/fish/functions/
 
-- name: Base CLI | fish | Deploy custom 'fish' functions
+- name: Base CLI | fish | Deploy configuration files
   ansible.builtin.copy:
     src: "fish/{{ item }}"
     dest: "{{ target_user_info.home }}/{{ item }}"
@@ -38,13 +36,6 @@
     group: "{{ target_user_info.name }}"
     mode: "0644"
   loop:
+    - .bashrc.d/99-launch-fish.sh
     - .config/fish/functions/fish_prompt.fish
     - .config/fish/functions/fish_greeting.fish
-
-- name: Base CLI | fish | Deploy 'fish' starter for 'bash'
-  ansible.builtin.copy:
-    src: fish/.bashrc.d/99-launch-fish.sh
-    dest: "{{ target_user_info.home }}/.bashrc.d/99-launch-fish.sh"
-    owner: "{{ target_user_info.name }}"
-    group: "{{ target_user_info.name }}"
-    mode: "0644"
