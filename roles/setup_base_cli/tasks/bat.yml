@@ -2,7 +2,7 @@
   ansible.builtin.set_fact:
     packages_to_install: "{{ packages_to_install + ['bat'] }}"
 
-- name: Base CLI | bat | Deploy `fish` functions for `bat`
+- name: Base CLI | bat | Deploy 'fish' functions for 'bat'
   ansible.builtin.copy:
     src: "bat/{{ item }}"
     dest: "{{ target_user_info.home }}/{{ item }}"
@@ -10,5 +10,5 @@
     group: "{{ target_user_info.name }}"
     mode: "0644"
   loop:
-    - ".config/fish/functions/cat.fish"
-    - ".config/fish/functions/bat.fish"
+    - .config/fish/functions/cat.fish
+    - .config/fish/functions/bat.fish

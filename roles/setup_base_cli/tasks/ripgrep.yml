@@ -2,7 +2,7 @@
   ansible.builtin.set_fact:
     packages_to_install: "{{ packages_to_install + ['ripgrep'] }}"
 
-- name: Base CLI | ripgrep | Deploy `fish` functions for `grep`
+- name: Base CLI | ripgrep | Deploy 'fish' functions for 'grep'
   ansible.builtin.copy:
     src: "ripgrep/{{ item }}"
     dest: "{{ target_user_info.home }}/{{ item }}"

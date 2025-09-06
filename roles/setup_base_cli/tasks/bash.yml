@@ -2,7 +2,7 @@
   ansible.builtin.set_fact:
     packages_to_install: "{{ packages_to_install + ['bash'] }}"
 
-- name: Base CLI | bash | Deploy `$HOME/.bashrc`
+- name: Base CLI | bash | Deploy '$HOME/.bashrc'
   ansible.builtin.copy:
     src: bash/.bashrc
     dest: "{{ target_user_info.home }}/{{ item }}"
@@ -10,14 +10,14 @@
     group: "{{ target_user_info.name }}"
     mode: "0644"
   loop:
-    - ".bashrc"
-    - ".bash_profile"
+    - .bashrc
+    - .bash_profile
 
-- name: Base CLI | bash | Ensure `$HOME/.bashrc.d/` directory exists
+- name: Base CLI | bash | Ensure '$HOME/.bashrc.d/' directory exists
   ansible.builtin.file:
     path: "{{ target_user_info.home }}/.bashrc.d"
     state: directory
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"
-    mode: '0755'
+    mode: "0755"
 
