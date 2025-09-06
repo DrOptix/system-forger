@@ -6,21 +6,25 @@
     name: tmux
     state: present
 
-- name: Base CLI | tmux | Ensure '$HOME/.config/tmux/' directory exists
+- name: Base CLI | tmux | Ensure required directory exists
   ansible.builtin.file:
-    path: "{{ target_user_info.home }}/.config/tmux/"
+    path: "{{ target_user_info.home }}/{{ item }}"
     state: directory
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"
     mode: "0755"
+  loop:
+    - .config/tmux/
 
-- name: Base CLI | tmux | Deploy '$HOME/.config/tmux/tmux.conf'
+- name: Base CLI | tmux | Deploy configuration files
   ansible.builtin.copy:
-    src: tmux/.config/tmux/tmux.conf
-    dest: "{{ target_user_info.home }}/.config/tmux/tmux.conf"
+    src: "tmux/{{ item }}"
+    dest: "{{ target_user_info.home }}/{{ item }}"
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"
     mode: "0644"
+  loop:
+    - .config/tmux/tmux.conf
 
 - name: Base CLI | tmux | Ensure TPM is installed
   ansible.builtin.git:
