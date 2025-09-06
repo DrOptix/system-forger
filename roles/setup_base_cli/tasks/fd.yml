@@ -8,15 +8,17 @@
     packages_to_install: "{{ packages_to_install + ['fd'] }}"
   when: ansible_distribution in ["Archlinux"]
 
-- name: Base CLI | fd | Ensure `fd` configuration directory exists
+- name: Base CLI | fd | Ensure required directories exists
   ansible.builtin.file:
-    path: "{{ target_user_info.home }}/.config/fd/"
+    path: "{{ target_user_info.home }}/{{ item }}"
     state: directory
     owner: "{{ target_user_info.name }}"
     group: "{{ target_user_info.name }}"
-    mode: '0755'
+    mode: "0755"
+  loop:
+    - .config/fd/
 
-- name: Base CLI | fd | Deploy `fish` functions for `fd`
+- name: Base CLI | fd | Deploy configuration files
   ansible.builtin.copy:
     src: "fd/{{ item }}"
     dest: "{{ target_user_info.home }}/{{ item }}"

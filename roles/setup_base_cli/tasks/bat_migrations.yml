@@ -1,4 +1,4 @@
-- name: Base CLI | bat migrations | Cleanup wrong deployed 'bat.fish' and 'cat.fish'
+- name: Base CLI | bat migrations | Cleanup wrong deployed files
   ansible.builtin.file:
     path: "{{ target_user_info.home }}/{{ old_file }}"
     state: absent
