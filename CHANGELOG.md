@@ -118,6 +118,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   and 'wsl' playbooks into a single 'workstation.yml' for improved testing
   efficiency and maintainability.
 
+- **setup_base_cli:** Further organized 'main' tasks by consistently grouping
+  all 'include_tasks' into loops with explicit relative paths, enhancing
+  structure and preparing for future tool additions.
+
 ### Fixed
 - **test:** `btop` execution failure in ArchLinux test containers by adding the
   `--privileged` flag to `podman run`. This addresses the lack of `CAP_SETFCAP`

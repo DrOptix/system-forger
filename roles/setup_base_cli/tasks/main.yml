@@ -4,34 +4,32 @@
   tags:
     - always
 
-- name: Base CLI | bash
-  ansible.builtin.include_tasks: ./bash.yml
-
-- name: Base CLI | fish
-  ansible.builtin.include_tasks: ./fish.yml
-
-- name: Base CLI | tmux
-  ansible.builtin.include_tasks: ./tmux.yml
-
-- name: Base CLI | eza
-  ansible.builtin.include_tasks: ./eza.yml
-
-- name: Base CLI | bat
-  ansible.builtin.include_tasks: "{{ bat_tasks }}"
+- name: Base CLI | Configure shells
+  ansible.builtin.include_tasks: "./{{ shell_task }}.yml"
   loop:
-    - bat_migrations.yml
-    - bat.yml
+    - bash
+    - fish
+    - tmux
   loop_control:
-    loop_var: bat_tasks
+    loop_var: shell_task
 
-- name: Base CLI | fd
-  ansible.builtin.include_tasks: ./fd.yml
+- name: Base CLI | Configure CLI tools alternatives
+  ansible.builtin.include_tasks: "./{{ cli_tools_alternatives_task }}.yml"
+  loop:
+    - bat_migrations
+    - bat
+    - fd
+    - eza
+    - ripgrep
+  loop_control:
+    loop_var: cli_tools_alternatives_task
 
-- name: Base CLI | ripgrep
-  ansible.builtin.include_tasks: ./ripgrep.yml
-
-- name: Base CLI | btop
-  ansible.builtin.include_tasks: ./btop.yml
+- name: Base CLI | Configure system monitoring and administration tools
+  ansible.builtin.include_tasks: "./{{ system_admin_tools_task }}.yml"
+  loop:
+    - btop
+  loop_control:
+    loop_var: system_admin_tools_task
 
 - name: Base CLI | Install all base packages
   become: yes
