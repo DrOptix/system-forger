@@ -1,0 +1,61 @@
+- name: Base CLI | eza | Mark 'eza' to be installed (ArchLinux, Ubuntu)
+  ansible.builtin.set_fact:
+    packages_to_install: "{{ packages_to_install + ['eza'] }}"
+  when: "ansible_distribution in ['Archlinux', 'Ubuntu']"
+
+- name: Base CLI | eza | Ensure 'eza' is installed (Fedora)
+  block:
+    - name: Base CLI | eza | Get status of currently installed 'eza'
+      ansible.builtin.stat:
+        path: /usr/bin/eza
+      register: eza_status
+      check_mode: no
+
+    - name: Base CLI | eza | Create temporary download directory
+      ansible.builtin.file:
+        path: /tmp/eza_download
+        state: directory
+        mode: "0755"
+      when: not eza_status.stat.exists
+
+    - name: Base CLI | eza | Download latest 'eza' release tarball
+      become: yes
+      ansible.builtin.unarchive:
+        src: https://github.com/eza-community/eza/releases/latest/download/eza_x86_64-unknown-linux-gnu.tar.gz
+        dest: /tmp/eza_download
+        remote_src: yes
+        owner: root
+        group: root
+        mode: "0755"
+      when: not eza_status.stat.exists
+
+    - name: Base CLI | eza | Install 'eza' binary to target directory
+      ansible.builtin.copy:
+        src: /tmp/eza_download/eza
+        dest: /usr/bin/eza
+        remote_src: yes
+        owner: root
+        group: root
+        mode: "0755"
+      become: yes
+      when: not eza_status.stat.exists
+
+    - name: Base CLI | eza | Cleanup temporary download directory
+      ansible.builtin.file:
+        path: /tmp/eza_download
+        state: absent
+      when: not eza_status.stat.exists
+  when: "ansible_distribution in ['Fedora']"
+
+- name: Base CLI | eza | Deploy 'eza' custom 'fish' functions
+  ansible.builtin.copy:
+    src: "eza/fish/functions/{{ item }}"
+    dest: "{{ target_user_info.home }}/.config/fish/functions/{{ item }}"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+  loop:
+    - ls.fish
+    - la.fish
+    - ll.fish
+    - lla.fish

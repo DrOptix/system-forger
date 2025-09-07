@@ -1,0 +1,42 @@
+# The task itself needs 'tmux', therefore we don't defer the installation at the
+# end of 'main'. We do it here.
+- name: Base CLI | tmux | Ensure 'tmux' is installed
+  become: yes
+  ansible.builtin.package:
+    name: tmux
+    state: present
+
+- name: Base CLI | tmux | Ensure required directory exists
+  ansible.builtin.file:
+    path: "{{ target_user_info.home }}/{{ item }}"
+    state: directory
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0755"
+  loop:
+    - .config/tmux/
+
+- name: Base CLI | tmux | Deploy configuration files
+  ansible.builtin.copy:
+    src: "tmux/{{ item }}"
+    dest: "{{ target_user_info.home }}/{{ item }}"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+  loop:
+    - .config/tmux/tmux.conf
+
+- name: Base CLI | tmux | Ensure TPM is installed
+  ansible.builtin.git:
+    repo: https://github.com/tmux-plugins/tpm
+    dest: "{{ target_user_info.home }}/.tmux/plugins/tpm"
+    version: master
+    single_branch: yes
+  register: tpm_clone_result
+  changed_when: tpm_clone_result.changed
+
+- name: Base CLI | tmux | Install TPM plugins
+  ansible.builtin.command:
+    cmd: "{{ target_user_info.home }}/.tmux/plugins/tpm/bin/install_plugins"
+  register: tpm_install_result
+  changed_when: "'Installing' in tpm_install_result.stdout"

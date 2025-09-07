@@ -1,9 +1,0 @@
-# THIS FILE IS MANAGED BY ANSIBLE; ANY MANUAL CHANGES WILL BE LOST
-#
-# This file is sourced from `~/.bashrc.d/`.
-# It sets up Rust environment.
-
-# Load cargo environment if it exists.
-if [ -f "{{ target_user_info.home }}/.cargo/env" ]; then
-    . "{{ target_user_info.home }}/.cargo/env"
-fi

@@ -1,0 +1,41 @@
+- name: Base CLI | Initialize package list
+  ansible.builtin.set_fact:
+    packages_to_install: []
+  tags:
+    - always
+
+- name: Base CLI | Configure shells
+  ansible.builtin.include_tasks: "./{{ shell_task }}.yml"
+  loop:
+    - bash
+    - fish
+    - tmux
+  loop_control:
+    loop_var: shell_task
+
+- name: Base CLI | Configure CLI tools alternatives
+  ansible.builtin.include_tasks: "./{{ cli_tools_alternatives_task }}.yml"
+  loop:
+    - bat_migrations
+    - bat
+    - fd
+    - eza
+    - ripgrep
+  loop_control:
+    loop_var: cli_tools_alternatives_task
+
+- name: Base CLI | Configure system monitoring and administration tools
+  ansible.builtin.include_tasks: "./{{ system_admin_tools_task }}.yml"
+  loop:
+    - btop
+  loop_control:
+    loop_var: system_admin_tools_task
+
+- name: Base CLI | Install all base packages
+  become: yes
+  ansible.builtin.package:
+    name: "{{ packages_to_install | unique }}"
+    state: present
+  when: packages_to_install | length > 0
+  tags:
+    - always

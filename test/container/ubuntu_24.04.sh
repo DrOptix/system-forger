@@ -6,74 +6,61 @@ set -euo pipefail
 SCRIPT_NAME=$(basename "$0")
 
 # --- Container configuration ---
-CONTAINER_IMAGE="system-forger:ubuntu-24.04"
-CONTAINER_NAME="system-forger_ubuntu-24.04_$(date +%Y%m%d_%H%M%S)"
+CONTAINER_IMAGE="ubuntu:24.04"
 CONTAINER_MOUNT_PATH="/opt/system-forger"
 
-# --- Hardcoded Paths ---
-
-# Determine script's directory.
+# Determine script's information.
+SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 # Calculate the absolute path to the Ansible project root.
-ABSOLUTE_ANSIBLE_PROJECT_ROOT="$(realpath -s "${SCRIPT_DIR}/../..")"
+ABSOLUTE_ANSIBLE_PROJECT_ROOT="$(realpath -s "$SCRIPT_DIR/../..")"
 
-# --- Cleanup logic ---
+function generate_selective_volume_mounts() {
+    local host_base_path="$1"
+    local container_base_path="$2"
+    local mounts_array=()
 
-# Function triggered on EXIT to cleanup the container
-function cleanup() {
-    echo "[$SCRIPT_NAME] Shell session ended. Initiating cleanup."
-    echo "[$SCRIPT_NAME]   Cleaning up container $CONTAINER_NAME..."
+    for item in "$host_base_path"/* "$host_base_path"/.*; do
+        local item_basename="$(basename "$item")"
 
-    podman container stop "$CONTAINER_NAME" &>/dev/null || true
-    podman container rm "$CONTAINER_NAME" &>/dev/null || true
+        if [[ "$item_basename" == "." || "$item_basename" == ".." || "$item_basename" == ".git" ]]; then
+            continue
+        fi
 
-    echo "[$SCRIPT_NAME]  Cleanup complete."
+        mounts_array+=("-v" "$item:$container_base_path/$item_basename:ro,Z")
+    done
+
+    # Output the array elements
+    echo "${mounts_array[@]}"
 }
 
-# Ensure cleanup is called on script exit
-trap cleanup EXIT
+function run_container() {
+    echo "[$SCRIPT_NAME] Start interactive shell in a disposable Ubuntu 24.04 container."
 
-# --- Main script logic ---
-#
-echo "[$SCRIPT_NAME] Initializing Podman Container"
-echo "[$SCRIPT_NAME]   Script directory: $SCRIPT_DIR"
-echo "[$SCRIPT_NAME]   Resolved Ansible Project Root: $ABSOLUTE_ANSIBLE_PROJECT_ROOT"
+    local mounts=$(generate_selective_volume_mounts \
+        "$ABSOLUTE_ANSIBLE_PROJECT_ROOT" \
+        "$CONTAINER_MOUNT_PATH")
 
-# Build the container image
-echo "[$SCRIPT_NAME]   Building custom $CONTAINER_IMAGE image..."
+    local container_commands=(
+        "export DEBIAN_FRONTEND=noninteractive;"
+        "apt-get update;"
+        "apt-get install -y --no-install-recommends sudo;"
+        "pushd /opt/system-forger/ >/dev/null;"
+        "./scripts/bootstrap.sh;"
+        "exec bash -i;"
+        "popd >/dev/null"
+    )
 
-if ! podman build -f "$SCRIPT_DIR"/ubuntu_24.04.Containerfile -t "$CONTAINER_IMAGE"; then
-    echo "[$SCRIPT_NAME]   Failed to build image. Check your Podman setup." >&2
-    exit 1
-fi
+    podman run -it --rm \
+        $mounts \
+        "$CONTAINER_IMAGE" bash -ic "${container_commands[*]}"
+}
 
-# Run the container with the entire Ansible project directory bind-mounted.
-# The 'Z' option handles SELinux relabeling if applicable.
-# 'ro' for read-only to prevent accidental host modifications.
-echo "[$SCRIPT_NAME]   Starting container '$CONTAINER_NAME' from image '$CONTAINER_IMAGE'..."
+function main() {
+    if ! run_container; then
+        echo "[$SCRIPT_NAME] Failed to start container."
+    fi
+}
 
-if ! podman run --name "$CONTAINER_NAME" \
-                --detach \
-                --volume "${ABSOLUTE_ANSIBLE_PROJECT_ROOT}:${CONTAINER_MOUNT_PATH}:ro,Z" \
-                "$CONTAINER_IMAGE" \
-                sleep infinity; then
-    echo "[$SCRIPT_NAME]   Failed to start container. Check Podman logs." >&2
-    exit 1
-fi
-
-echo "[$SCRIPT_NAME]   Container '$CONTAINER_NAME' started."
-
-echo "[$SCRIPT_NAME] Entering Interactive Shell"
-echo "[$SCRIPT_NAME]   Your entire Ansible project is mounted inside the container at: ${CONTAINER_MOUNT_PATH}"
-echo "[$SCRIPT_NAME]   "
-echo "[$SCRIPT_NAME]   You can 'cd' into ${CONTAINER_MOUNT_PATH} to navigate your project."
-echo "[$SCRIPT_NAME]   "
-echo "[$SCRIPT_NAME]   Press Ctrl+D or type 'exit' to leave the shell and trigger container cleanup."
-echo "[$SCRIPT_NAME]   "
-
-# Enter the shell. This command will block until you exit the shell.
-if ! podman exec -it "$CONTAINER_NAME" bash; then
-    echo "[$SCRIPT_NAME]  Failed to open interactive shell. Container might have stopped or crashed." >&2
-    exit 1
-fi
+main "$@"

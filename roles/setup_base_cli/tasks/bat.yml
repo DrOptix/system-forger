@@ -1,0 +1,14 @@
+- name: Base CLI | bat | Mark 'bat' to be installed
+  ansible.builtin.set_fact:
+    packages_to_install: "{{ packages_to_install + ['bat'] }}"
+
+- name: Base CLI | bat | Deploy configuration files
+  ansible.builtin.copy:
+    src: "bat/{{ item }}"
+    dest: "{{ target_user_info.home }}/{{ item }}"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+  loop:
+    - .config/fish/functions/cat.fish
+    - .config/fish/functions/bat.fish
