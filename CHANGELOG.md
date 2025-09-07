@@ -49,6 +49,8 @@ and this project adheres to [Semantic Versioning].
     integration. In case `fd` gets removed it will **NOT** revert to using
     `find`. `fd` and `find` are not CLI or partially CLI compatible.
 
+  - **neovim:** Install `neovim` without any custom configuration.
+
   - **btop:** Modern system monitor for the CLI. Provided monitoring for disk
     usage, CPU and GPU loads, current processes, network upload and download
     speed overview.
