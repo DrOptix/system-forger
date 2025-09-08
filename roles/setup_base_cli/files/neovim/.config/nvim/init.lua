@@ -58,3 +58,10 @@ vim.keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", opts)
 
 opts.desc = "Go to previous tab"
 vim.keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", opts)
+
+-- Editor
+opts.desc = "Move selected lines down"
+vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv", opts)
+
+opts.desc = "Move selected lines up"
+vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv", opts)

@@ -59,6 +59,7 @@ and this project adheres to [Semantic Versioning].
       make splits equal size.
     - Ergonomic tabs management: create new tab, close tab, go to next tab, go
       to previous tab.
+    - Move selected lines up or down
 
   - **btop:** Modern system monitor for the CLI. Provided monitoring for disk
     usage, CPU and GPU loads, current processes, network upload and download
