@@ -1,3 +1,23 @@
 - name: Base CLI | neovim | Mark 'neovim' to be installed
   ansible.builtin.set_fact:
     packages_to_install: "{{ packages_to_install + ['neovim'] }}"
+
+- name: Base CLI | neovim | Ensure required directories exists
+  ansible.builtin.file:
+    path: "{{ target_user_info.home }}/{{ item }}"
+    state: directory
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0755"
+  loop:
+    - .config/nvim/
+
+- name: Base CLI | neovim | Deploy configuration files
+  ansible.builtin.copy:
+    src: "neovim/{{ item }}"
+    dest: "{{ target_user_info.home }}/{{ item }}"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+  loop:
+    - .config/nvim/init.lua
