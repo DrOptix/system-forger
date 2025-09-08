@@ -57,6 +57,8 @@ and this project adheres to [Semantic Versioning].
     - Use spaces instead of tabs
     - Ergonomic splits management: split horizontally, split vertically, close,
       make splits equal size.
+    - Ergonomic tabs management: create new tab, close tab, go to next tab, go
+      to previous tab.
 
   - **btop:** Modern system monitor for the CLI. Provided monitoring for disk
     usage, CPU and GPU loads, current processes, network upload and download

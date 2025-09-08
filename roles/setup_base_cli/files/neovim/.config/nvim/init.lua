@@ -45,3 +45,16 @@ vim.keymap.set("n", "<leader>se", "<C-w>=", opts)
 
 opts.desc = "Close current split"
 vim.keymap.set("n", "<leader>sx", "<cmd>close<CR>", opts)
+
+-- Tabs management --
+opts.desc = "Open new tab"
+vim.keymap.set("n", "<leader>to", "<cmd>tabnew<CR>", opts)
+
+opts.desc = "Close current tab"
+vim.keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", opts)
+
+opts.desc = "Go to next tab"
+vim.keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", opts)
+
+opts.desc = "Go to previous tab"
+vim.keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", opts)
