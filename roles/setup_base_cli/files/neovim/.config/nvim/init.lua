@@ -26,3 +26,22 @@ vim.opt.cursorline = true
 --   * First uppercase letter assumes case sensitive search
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
+
+-- Keybindings --
+
+vim.g.mapleader = " "
+
+-- Window splits
+local opts = { noremap = true, silent = true }
+
+opts.desc = "Split window vertically"
+vim.keymap.set("n", "<leader>sv", "<C-w>v", opts)
+
+opts.desc = "Split window horizontally"
+vim.keymap.set("n", "<leader>sh", "<C-w>s", opts)
+
+opts.desc = "Make splits equal size"
+vim.keymap.set("n", "<leader>se", "<C-w>=", opts)
+
+opts.desc = "Close current split"
+vim.keymap.set("n", "<leader>sx", "<cmd>close<CR>", opts)
