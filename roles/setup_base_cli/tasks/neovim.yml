@@ -11,6 +11,9 @@
     mode: "0755"
   loop:
     - .config/nvim/
+    - .config/nvim/lua/
+    - .config/nvim/lua/system-forger/
+    - .config/nvim/lua/system-forger/plugins
 
 - name: Base CLI | neovim | Deploy configuration files
   ansible.builtin.copy:
@@ -21,3 +24,6 @@
     mode: "0644"
   loop:
     - .config/nvim/init.lua
+    - .config/nvim/lua/system-forger/init.lua
+    - .config/nvim/lua/system-forger/lazy.lua
+    - .config/nvim/lua/system-forger/plugins/telescope.lua

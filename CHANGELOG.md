@@ -60,6 +60,8 @@ and this project adheres to [Semantic Versioning].
     - Ergonomic tabs management: create new tab, close tab, go to next tab, go
       to previous tab.
     - Move selected lines up or down
+    - Fuzzy finder using `telescope` plugin. `lazy.nvim` is used as plugin
+      manager.
 
   - **btop:** Modern system monitor for the CLI. Provided monitoring for disk
     usage, CPU and GPU loads, current processes, network upload and download
