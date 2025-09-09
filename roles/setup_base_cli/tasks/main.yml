@@ -24,6 +24,13 @@
   loop_control:
     loop_var: cli_tools_alternatives_task
 
+- name: Base CLI | Configure editors
+  ansible.builtin.include_tasks: "./{{ editor_task }}.yml"
+  loop:
+    - neovim
+  loop_control:
+    loop_var: editor_task
+
 - name: Base CLI | Configure system monitoring and administration tools
   ansible.builtin.include_tasks: "./{{ system_admin_tools_task }}.yml"
   loop:

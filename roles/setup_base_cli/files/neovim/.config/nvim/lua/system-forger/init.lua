@@ -1,0 +1,3 @@
+-- THIS FILE IS MANAGED BY ANSIBLE; ANY MANUAL CHANGES WILL BE LOST
+
+require("system-forger.lazy")
