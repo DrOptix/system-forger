@@ -1,6 +1,6 @@
 - name: Base CLI | ripgrep | Mark 'ripgrep' to be installed
   ansible.builtin.set_fact:
-    packages_to_install: "{{ packages_to_install + ['ripgrep'] }}"
+    setup_base_cli_packages: "{{ setup_base_cli_packages + ['ripgrep'] }}"
 
 - name: Base CLI | ripgrep | Deploy configuration files
   ansible.builtin.copy:

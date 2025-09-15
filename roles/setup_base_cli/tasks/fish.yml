@@ -1,20 +1,20 @@
 - name: Base CLI | fish | Mark 'fish' to be installed
   ansible.builtin.set_fact:
-    packages_to_install: "{{ packages_to_install + ['fish'] }}"
+    setup_base_cli_packages: "{{ setup_base_cli_packages + ['fish'] }}"
 
 - name: Base CLI | fish | Mark 'hostname' to be installed (Ubuntu, Fedora)
   ansible.builtin.set_fact:
-    packages_to_install: "{{ packages_to_install + ['hostname'] }}"
+    setup_base_cli_packages: "{{ setup_base_cli_packages + ['hostname'] }}"
   when: "ansible_distribution in ['Ubuntu', 'Fedora']"
 
 - name: Base CLI | fish | Mark 'inetutils' to be installed (Ubuntu, Fedora)
   ansible.builtin.set_fact:
-    packages_to_install: "{{ packages_to_install + ['inetutils'] }}"
+    setup_base_cli_packages: "{{ setup_base_cli_packages + ['inetutils'] }}"
   when: "ansible_distribution in ['Archlinux']"
 
 - name: Base CLI | fish | Mark 'uptime' to be installed (Fedora)
   ansible.builtin.set_fact:
-    packages_to_install: "{{ packages_to_install + ['procps-ng'] }}"
+    setup_base_cli_packages: "{{ setup_base_cli_packages + ['procps-ng'] }}"
   when: "ansible_distribution in ['Fedora']"
 
 - name: Base CLI | fish | Ensure required directories exists

@@ -1,6 +1,6 @@
 - name: Base CLI | bash | Mark 'bash' to be installed
   ansible.builtin.set_fact:
-    packages_to_install: "{{ packages_to_install + ['bash'] }}"
+    setup_base_cli_packages: "{{ setup_base_cli_packages + ['bash'] }}"
 
 - name: Base CLI | bash | Deploy configuration files
   ansible.builtin.copy:

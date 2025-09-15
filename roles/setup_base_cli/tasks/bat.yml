@@ -1,6 +1,6 @@
 - name: Base CLI | bat | Mark 'bat' to be installed
   ansible.builtin.set_fact:
-    packages_to_install: "{{ packages_to_install + ['bat'] }}"
+    setup_base_cli_packages: "{{ setup_base_cli_packages + ['bat'] }}"
 
 - name: Base CLI | bat | Deploy configuration files
   ansible.builtin.copy:

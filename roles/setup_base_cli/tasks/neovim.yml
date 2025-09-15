@@ -1,6 +1,6 @@
 - name: Base CLI | neovim | Mark 'neovim' to be installed
   ansible.builtin.set_fact:
-    packages_to_install: "{{ packages_to_install + ['neovim'] }}"
+    setup_base_cli_packages: "{{ setup_base_cli_packages + ['neovim'] }}"
 
 - name: Base CLI | neovim | Ensure required directories exists
   ansible.builtin.file:
