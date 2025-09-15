@@ -39,7 +39,7 @@
     loop_var: system_admin_tools_task
 
 - name: Base CLI | Install all base packages
-  become: yes
+  become: true
   ansible.builtin.package:
     name: "{{ packages_to_install | unique }}"
     state: present
