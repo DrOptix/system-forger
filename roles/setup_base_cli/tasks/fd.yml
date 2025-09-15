@@ -1,11 +1,11 @@
 - name: Base CLI | fd | Mark 'fd-find' to be installed (Fedora, Ubuntu)
   ansible.builtin.set_fact:
-    packages_to_install: "{{ packages_to_install + ['fd-find'] }}"
+    setup_base_cli_packages: "{{ setup_base_cli_packages + ['fd-find'] }}"
   when: ansible_distribution in ["Fedora", "Ubuntu"]
 
 - name: Base CLI | fd | Mark 'fd' to be installed (ArchLinux)
   ansible.builtin.set_fact:
-    packages_to_install: "{{ packages_to_install + ['fd'] }}"
+    setup_base_cli_packages: "{{ setup_base_cli_packages + ['fd'] }}"
   when: ansible_distribution in ["Archlinux"]
 
 - name: Base CLI | fd | Ensure required directories exists

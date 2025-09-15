@@ -1,6 +1,6 @@
 - name: Base CLI | Initialize package list
   ansible.builtin.set_fact:
-    packages_to_install: []
+    setup_base_cli_packages: []
   tags:
     - always
 
@@ -39,10 +39,10 @@
     loop_var: system_admin_tools_task
 
 - name: Base CLI | Install all base packages
-  become: yes
+  become: true
   ansible.builtin.package:
-    name: "{{ packages_to_install | unique }}"
+    name: "{{ setup_base_cli_packages | unique }}"
     state: present
-  when: packages_to_install | length > 0
+  when: setup_base_cli_packages | length > 0
   tags:
     - always
