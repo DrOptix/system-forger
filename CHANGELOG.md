@@ -70,7 +70,8 @@ and this project adheres to [Semantic Versioning].
 - **bootstrapping:** Automate initial setup and Ansible playbook execution.
 
   - The `scripts/bootstrap.sh` is provided to install `git` and `ansible` on all
-    supported platforms and clone the `system-forger`.
+    supported platforms and clone the `system-forger`. After the clone the it
+    will execute `scripts/install.sh` from the cloned repository.
 
   - The `scripts/install.sh` simplifies running the `workstation.yml` playbook
     with intelligent argument handling for user, authorization and tags.
