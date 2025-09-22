@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 
 # Determine script's information.
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
-
 SYSTEM_FORGER_BRANCH="${SYSTEM_FORGER_BRANCH:-master}"
 SYSTEM_FORGER_REPO_PATH="$HOME/.local/share/system-forger"
 
@@ -145,7 +143,7 @@ function main() {
     install_packages git ansible
     clean_and_clone "$SYSTEM_FORGER_BRANCH"
 
-    $SCRIPT_DIR/install.sh
+    $SYSTEM_FORGER_REPO_PATH/scripts/install.sh
 }
 
 main "$@"
