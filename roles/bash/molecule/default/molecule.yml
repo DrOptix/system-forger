@@ -1,0 +1,26 @@
+role_name_check: 1
+
+driver:
+  name: podman
+
+platforms:
+  - name: sf_fedora_42
+    image: fedora:42
+    pre_build_image: false
+
+  - name: sf_ubuntu_2404
+    image: ubuntu:24.04
+    pre_build_image: false
+
+  - name: sf_archlinux_latest
+    image: archlinux:latest
+    pre_build_image: false
+
+provisioner:
+  name: ansible
+  playbooks:
+    converge: converge.yml
+    verify: verify.yml
+
+verifier:
+  name: ansible
