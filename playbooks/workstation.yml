@@ -23,6 +23,7 @@
         - always
 
   roles:
+    - role: bash
     - role: setup_base_cli
       tags:
         - base_cli

@@ -1,0 +1,9 @@
+galaxy_info:
+  role_name: bash
+  namespace: system_forger
+  author: DrOptix
+  description: Basic shell configuration for Linux systems.
+  license: MIT
+  min_ansible_version: "2.10"
+
+dependencies: []
