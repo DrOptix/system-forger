@@ -7,8 +7,8 @@ All tasks listed here are high-priority architectural refactorings.
 
 ## Phase 1: Role Granularization
 
-- [ ]  Refactor `setup_base_cli` into granular roles:
-    - [ ] Create `roles/cli_bash` for Bash setup.
+- [/]  Refactor `setup_base_cli` into granular roles:
+    - [x] Create `roles/cli_bash` for Bash setup.
     - [ ] Create `roles/cli_fish` for Fish setup.
     - [ ] Create `roles/cli_tmux` for Tmux setup.
     - [ ] Create `roles/cli_modern_tools` for `eza`, `bat`, `ripgrep`, `fd`
