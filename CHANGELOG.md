@@ -12,14 +12,16 @@ and this project adheres to [Semantic Versioning].
 - **playbooks**: Add a unique `workstation.yml` playbook that is meant to
   orchestrate all the tasks. Granularity is achieved by the use of Ansible tags.
 
-- **setup_base_cli:** Role that sets up a base layer of modern CLI tools for
-  workstations, containers and VMs.
+- **roles:**
 
   - **bash:** Login shell setup for modularity with a `.bashrc` and
     `.bash_profile` that integrate with `.bashrc.d/`. The user or other Ansible
     tasks can place their own config files in `.bashrc.d/` and a new instance
     of `bash` will source them. For interactive shells `bash` is configured to
     launch `fish`.
+
+- **setup_base_cli:** Role that sets up a base layer of modern CLI tools for
+  workstations, containers and VMs.
 
   - **fish:** Primary interactive shell with custom prompt and greeting. Like
     `bash` this one is set to be modular. The user or other Ansible tasks can

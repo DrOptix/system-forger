@@ -1,0 +1,33 @@
+- name: Install 'bash'
+  become: true
+  ansible.builtin.package:
+    name: bash
+    state: present
+
+- name: Set 'bash' as the login shell for the target user
+  become: true
+  ansible.builtin.user:
+    name: "{{ target_user_info.name }}"
+    shell: /usr/bin/bash
+  changed_when: false
+
+- name: Ensure required directories exists
+  ansible.builtin.file:
+    path: "{{ target_user_info.home }}/{{ item }}"
+    state: directory
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0755"
+  loop:
+    - .bashrc.d
+
+- name: Deploy configuration files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ target_user_info.home }}/{{ item }}"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+  loop:
+    - ".bashrc"
+    - ".bash_profile"

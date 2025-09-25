@@ -1,0 +1,93 @@
+- name: Verify
+  hosts: all
+  gather_facts: true
+
+  vars:
+    target_user_info:
+      name: molecule_user
+      home: /home/molecule_user
+
+    bash_config_files:
+      - .bashrc
+      - .bash_profile
+
+    bash_config_dir: .bashrc.d
+
+    bash_expect_shell_path: /usr/bin/bash
+
+  tasks:
+    - name: Get package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert 'bash' package is installed
+      ansible.builtin.assert:
+        that: "'bash' in ansible_facts.packages"
+        fail_msg: "'bash' package is not installed."
+
+    - name: Construct command to get login shell for '{{ target_user_info.name }}'
+      ansible.builtin.set_fact:
+        get_shell_command: "/usr/bin/getent passwd {{ target_user_info.name }} | /usr/bin/cut -d: -f7"
+      changed_when: false
+
+    - name: Execute command to get current login shell for '{{ target_user_info.name }}'
+      ansible.builtin.shell: "{{ get_shell_command }}"
+      register: user_shell_output
+      changed_when: false
+
+    - name: Assert login shell is '/usr/bin/bash' for '{{ target_user_info.name }}'
+      ansible.builtin.assert:
+        that: "user_shell_output.stdout == '/usr/bin/bash'"
+        fail_msg: "Login shell for '{{ target_user_info.name }}' is '{{ user_shell_output.stdout }}', expected '/usr/bin/bash'."
+
+    - name: Assert login shell is '/usr/bin/bash' for '{{ target_user_info.name }}'
+      ansible.builtin.assert:
+        that: "user_shell_output.stdout == '{{ bash_expect_shell_path }}'"
+        fail_msg: "Login shell for '{{ target_user_info.name }}' is '{{ user_shell_output.stdout }}', expected '{{ bash_expect_shell_path }}'."
+
+    - name: Stat '{{ target_user_info.home }}/{{ bash_config_dir }}' directory
+      ansible.builtin.stat:
+        path: "{{ target_user_info.home }}/{{ bash_config_dir }}"
+      register: bashrc_d_dir_stat
+
+    - name: Assert '{{ bash_config_dir }}' directory exists and has correct permissions
+      ansible.builtin.assert:
+        that:
+          - bashrc_d_dir_stat.stat.exists
+          - bashrc_d_dir_stat.stat.isdir
+          - bashrc_d_dir_stat.stat.mode == "0755"
+        fail_msg: "Directory '{{ bash_config_dir }}' does not exist, is not a directory, or has incorrect permissions."
+
+    - name: Get local checksums of shell configuration files
+      ansible.builtin.stat:
+        path: "{{ playbook_dir }}/../../files/{{ item }}"
+        checksum_algorithm: sha256
+      register: local_file_checksums
+      loop: "{{ bash_config_files }}"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Get remote checksums of deployed shell configuration files
+      ansible.builtin.stat:
+        path: "{{ target_user_info.home }}/{{ item }}"
+        checksum_algorithm: sha256
+      register: remote_file_checksums
+      loop: "{{ bash_config_files }}"
+      loop_control:
+        extended: true
+
+    - name: Assert content and permissions of shell configuration files match expected
+      ansible.builtin.assert:
+        that:
+           - remote_stat_result.stat.exists
+           - remote_stat_result.stat.checksum == local_stat_result.stat.checksum
+           - remote_stat_result.stat.mode == "0644"
+           - remote_stat_result.stat.pw_name == target_user_info.name
+           - remote_stat_result.stat.gr_name == target_user_info.name
+        fail_msg: "File '{{ item }}' does not match expected state (exists, content, permissions, or ownership)."
+      loop: "{{ bash_config_files }}"
+      loop_control:
+        extended: true
+      vars:
+        local_stat_result: "{{ (local_file_checksums.results | selectattr('item', 'equalto', item) | first) }}"
+        remote_stat_result: "{{ (remote_file_checksums.results | selectattr('item', 'equalto', item) | first) }}"
