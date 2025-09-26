@@ -1,0 +1,65 @@
+- name: Converge
+  hosts: all
+  gather_facts: false
+
+  vars:
+    target_user_info:
+      name: molecule_user
+      home: /home/molecule_user
+
+  pre_tasks:
+    - name: "Ensure Python & essential tools installed (Fedora)"
+      ansible.builtin.raw: "dnf install -y {{ item }}"
+      when:
+        - inventory_hostname == 'sf_fedora_42'
+        - ansible_python_interpreter is not defined
+      changed_when: false
+      loop:
+        - python3
+        - python3-dnf
+        - sudo
+        - glibc-common
+
+    - name: Ensure apt cache is updated (Ubuntu)
+      ansible.builtin.raw: apt update
+      when:
+        - inventory_hostname == 'sf_ubuntu_2404'
+        - ansible_python_interpreter is not defined
+      changed_when: false
+
+    - name: "Ensure Python & essential tools installed (Ubuntu)"
+      ansible.builtin.raw: "apt install -y {{ item }}"
+      when:
+        - inventory_hostname == 'sf_ubuntu_2404'
+        - ansible_python_interpreter is not defined
+      changed_when: false
+      loop:
+        - python3
+        - sudo
+        - gettext-base
+
+    - name: "Ensure Python & essential tools installed (ArchLinux)"
+      ansible.builtin.raw: "pacman -Sy --noconfirm {{ item }}"
+      when:
+        - inventory_hostname == 'sf_archlinux_latest'
+        - ansible_python_interpreter is not defined
+      changed_when: false
+      loop:
+        - python
+        - python-setuptools
+        - sudo
+        - gettext
+
+    - name: Gather facts (now that 'python3' is ensured)
+      ansible.builtin.setup:
+
+    - name: Ensure target user '{{ target_user_info.name }}' exists
+      ansible.builtin.user:
+        name: "{{ target_user_info.name }}"
+        state: present
+        shell: /bin/sh
+        create_home: true
+      changed_when: false
+
+  roles:
+    - role: system_forger.fish

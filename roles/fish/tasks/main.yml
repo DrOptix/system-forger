@@ -1,0 +1,48 @@
+- name: Install 'fish'
+  ansible.builtin.package:
+    name: fish
+    state: present
+
+- name: Install 'hostname' and 'uptime' (Fedora)
+  ansible.builtin.package:
+    name:
+      - hostname
+      - procps-ng # provides 'uptime'
+    state: present
+  when: ansible_distribution == 'Fedora'
+
+- name: Install 'hostname' (Ubuntu)
+  ansible.builtin.package:
+    name: hostname
+    state: present
+  when: ansible_distribution == 'Ubuntu'
+
+- name: Install 'hostname' (ArchLinux)
+  ansible.builtin.package:
+    name:
+      - inetutils # provides 'hostname'
+    state: present
+  when: ansible_distribution == 'Archlinux'
+
+- name: Ensure required directories exists
+  ansible.builtin.file:
+    path: "{{ target_user_info.home }}/{{ item }}"
+    state: directory
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0755"
+  loop:
+    - .config/fish/conf.d/
+    - .config/fish/functions/
+
+- name: Deploy configuration files
+  ansible.builtin.copy:
+    src: "{{ item }}"
+    dest: "{{ target_user_info.home }}/{{ item }}"
+    owner: "{{ target_user_info.name }}"
+    group: "{{ target_user_info.name }}"
+    mode: "0644"
+  loop:
+    - .bashrc.d/99-launch-fish.sh
+    - .config/fish/functions/fish_prompt.fish
+    - .config/fish/functions/fish_greeting.fish
