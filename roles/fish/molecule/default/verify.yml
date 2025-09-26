@@ -1,0 +1,99 @@
+- name: Verify
+  hosts: all
+  gather_facts: true
+
+  vars:
+    target_user_info:
+      name: molecule_user
+      home: /home/molecule_user
+
+    fish_config_dirs:
+      - .config/fish/conf.d/
+      - .config/fish/functions/
+
+    fish_config_files:
+      - .bashrc.d/99-launch-fish.sh
+      - .config/fish/functions/fish_prompt.fish
+      - .config/fish/functions/fish_greeting.fish
+
+  tasks:
+    - name: Get package facts
+      ansible.builtin.package_facts:
+        manager: auto
+
+    - name: Assert 'fish' package is installed
+      ansible.builtin.assert:
+        that: "'fish' in ansible_facts.packages"
+        fail_msg: "'fish' package is not installed."
+
+    - name: Assert Fedora specific packages are installed
+      ansible.builtin.assert:
+        that:
+          - "'hostname' in ansible_facts.packages"
+          - "'procps-ng' in ansible_facts.packages"
+        fail_msg: >
+          "Required Fedora packages (hostname, procps-ng) are not installed."
+      when: ansible_distribution == 'Fedora'
+
+    - name: Assert Ubuntu specific packages are installed
+      ansible.builtin.assert:
+        that: "'hostname' in ansible_facts.packages"
+        fail_msg: "Required Ubuntu package (hostname) is not installed."
+      when: ansible_distribution == 'Ubuntu'
+
+    - name: Assert ArchLinux specific packages are installed
+      ansible.builtin.assert:
+        that: "'inetutils' in ansible_facts.packages"
+        fail_msg: "Required Archlinux package (inetutils) is not installed."
+      when: ansible_distribution == 'Archlinux'
+
+    - name: Stat 'fish' configuration directories
+      ansible.builtin.stat:
+        path: "{{ target_user_info.home }}/{{ item }}"
+      register: fish_dir_stats
+      loop: "{{ fish_config_dirs }}"
+
+    - name: Assert fish configuration directories exist and have correct permissions
+      ansible.builtin.assert:
+        that:
+          - item.stat.exists is true
+          - item.stat.isdir is true
+          - item.stat.pw_name == target_user_info.name
+          - item.stat.gr_name == target_user_info.name
+          - item.stat.mode == "0755"
+        fail_msg: "Directory '{{ item.item }}' failed checks (mode: {{ item.stat.mode }})."
+      loop: "{{ fish_dir_stats.results }}"
+
+    - name: Get local checksums of shell configuration files
+      ansible.builtin.stat:
+        path: "{{ playbook_dir }}/../../files/{{ item }}"
+        checksum_algorithm: sha256
+      register: local_file_checksums
+      loop: "{{ fish_config_files }}"
+      delegate_to: localhost
+      run_once: true
+
+    - name: Get remote checksums of deployed shell configuration files
+      ansible.builtin.stat:
+        path: "{{ target_user_info.home }}/{{ item }}"
+        checksum_algorithm: sha256
+      register: remote_file_checksums
+      loop: "{{ fish_config_files }}"
+      loop_control:
+        extended: true
+
+    - name: Assert content and permissions of shell configuration files match expected
+      ansible.builtin.assert:
+        that:
+           - remote_stat_result.stat.exists
+           - remote_stat_result.stat.checksum == local_stat_result.stat.checksum
+           - remote_stat_result.stat.mode == "0644"
+           - remote_stat_result.stat.pw_name == target_user_info.name
+           - remote_stat_result.stat.gr_name == target_user_info.name
+        fail_msg: "File '{{ item }}' does not match expected state (exists, content, permissions, or ownership)."
+      loop: "{{ fish_config_files }}"
+      loop_control:
+        extended: true
+      vars:
+        local_stat_result: "{{ (local_file_checksums.results | selectattr('item', 'equalto', item) | first) }}"
+        remote_stat_result: "{{ (remote_file_checksums.results | selectattr('item', 'equalto', item) | first) }}"
