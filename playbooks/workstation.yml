@@ -24,6 +24,7 @@
 
   roles:
     - role: bash
+    - role: fish
     - role: setup_base_cli
       tags:
         - base_cli

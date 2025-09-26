@@ -20,13 +20,13 @@ and this project adheres to [Semantic Versioning].
     of `bash` will source them. For interactive shells `bash` is configured to
     launch `fish`.
 
-- **setup_base_cli:** Role that sets up a base layer of modern CLI tools for
-  workstations, containers and VMs.
-
   - **fish:** Primary interactive shell with custom prompt and greeting. Like
     `bash` this one is set to be modular. The user or other Ansible tasks can
     place their own config files in `.config/fish/conf.d/` and a new instance
     of `fish` will source them.
+
+- **setup_base_cli:** Role that sets up a base layer of modern CLI tools for
+  workstations, containers and VMs.
 
   - **tmux:** Manually invoked. Used to enhance the experience in interactive
     shells when multiple terminals must share the same terminal window. Add the
